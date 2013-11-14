@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="Xaudio2Test.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Xaudio2Test"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Canvas PointerPressed="Canvas_PointerPressed_1">
+        <TextBlock Name="errorText"
+               FontSize="24"
+               TextWrapping="Wrap"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top" Width="1346" Canvas.Left="10" Height="77" Canvas.Top="10"/>
+        <Button Name="submitButton"
+            Content="Submit Audio Button"
+            Visibility="Visible"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Click="OnSubmitButtonClick" Canvas.Left="610" Canvas.Top="360" />
+            <Slider x:Name="freqSlider" Canvas.Left="176" Canvas.Top="568" Width="810" ValueChanged="freqSlider_ValueChanged"/>
+            <Slider x:Name="VolSlider" Height="50" Canvas.Left="-62.27" Canvas.Top="286.27" Width="514" RenderTransformOrigin="0.487,0.4" UseLayoutRounding="False" d:LayoutRounding="Auto" ValueChanged="Slider_ValueChanged_1">
+                <Slider.RenderTransform>
+                    <CompositeTransform Rotation="90"/>
+                </Slider.RenderTransform>
+            </Slider>
+        </Canvas>
+    </Grid>
+</Page>

@@ -1,0 +1,6 @@
+Debug
+*.suo
+*.sdf
+*.opensdf
+ipch
+Xaudio2Test/Generated Files/*
