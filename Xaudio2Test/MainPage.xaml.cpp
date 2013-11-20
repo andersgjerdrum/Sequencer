@@ -20,7 +20,7 @@ using namespace Windows::UI::Xaml::Data;
 using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
-
+using namespace Windows::UI::Input;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 MainPage::MainPage()
@@ -41,11 +41,6 @@ MainPage::MainPage()
 	Oscillator1 = new Audio(pXAudio2.Get());
 	Oscillator2 = new Audio(pXAudio2.Get());
 
-    freqSlider->Value = 69;    // ie, 440 Hz
-    VolSlider->Value = 2;
-    
-	submitButton->Visibility = Windows::UI::Xaml::Visibility::Visible;
-
 }
 
 
@@ -60,38 +55,41 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 }
 
 
-void MainPage::OnSubmitButtonClick(Object^ sender, RoutedEventArgs^ args)
-{
-	
-	return;
-}
-
 
 void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	errorText->Text = L"Pointer pressed!";
-}
-
-
-void Xaudio2Test::MainPage::freqSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e)
-{
-
+	PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
+	int x = p->RawPosition.X;
+	int y = p->RawPosition.Y;
 	if(Oscillator1 != nullptr && Oscillator2 != nullptr)
 	{
-		int noteNum = (int)e->NewValue;
-		double freq = 440 *pow(2,(noteNum - 69) /12);
+		int noteNum = 50;
+		double freq = GetTone(x,110,440,RectCanvas->RenderSize.Width) *pow(2,(noteNum - 69) /12);
 		Oscillator1->SetFrequency((float)freq);
-		 freq = 110 *pow(2,(noteNum - 69) /12);
+		double freq2 = GetTone(y,110,440,RectCanvas->RenderSize.Height) *pow(2,(noteNum - 69) /12);
 		Oscillator2->SetFrequency((float)freq);
+		errorText->Text = "Pos:(" + x.ToString() + "," + y.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
+	}
+
+}
+
+void Xaudio2Test::MainPage::Canvas_PointerMoved_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
+{
+	PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
+	int x = p->RawPosition.X;
+	int y = p->RawPosition.Y;
+	if(Oscillator1 != nullptr && Oscillator2 != nullptr)
+	{
+		int noteNum = 50;
+		double freq = GetTone(x,110,440,RectCanvas->RenderSize.Width) *pow(2,(noteNum - 69) /12);
+		Oscillator1->SetFrequency((float)freq);
+		double freq2 = GetTone(y,110,440,RectCanvas->RenderSize.Height) *pow(2,(noteNum - 69) /12);
+		Oscillator2->SetFrequency((float)freq);
+		errorText->Text = "Pos:(" + x.ToString() + "," + y.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
 	}
 }
 
-
-void Xaudio2Test::MainPage::Slider_ValueChanged_1(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e)
+int Xaudio2Test::MainPage::GetTone(double pointer, double min, double max, double maxPointer)
 {
-	if(Oscillator1 != nullptr && Oscillator2 != nullptr)
-	{
-		Oscillator1->SetAmplitude((float)e->NewValue/100);
-		Oscillator2->SetAmplitude((float)e->NewValue/100);
-	}
+	return (int)(min + ((min - max)*(pointer/maxPointer)));
 }
