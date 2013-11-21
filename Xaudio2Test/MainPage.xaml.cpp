@@ -80,16 +80,17 @@ void Xaudio2Test::MainPage::Canvas_PointerMoved_1(Platform::Object^ sender, Wind
 	int y = p->RawPosition.Y;
 	if(Oscillator1 != nullptr && Oscillator2 != nullptr)
 	{
-		int noteNum = 50;
-		double freq = GetTone(x,110,440,RectCanvas->RenderSize.Width) *pow(2,(noteNum - 69) /12);
+		int noteNumX = 50;
+		int noteNumY = 50;
+		double freq = GetTone(x,110,880,RectCanvas->RenderSize.Width) *pow(2,(noteNumX - 69) /12);
 		Oscillator1->SetFrequency((float)freq);
-		double freq2 = GetTone(y,110,440,RectCanvas->RenderSize.Height) *pow(2,(noteNum - 69) /12);
-		Oscillator2->SetFrequency((float)freq);
+		double freq2 = GetTone(y,110,880,RectCanvas->RenderSize.Height) *pow(2,(noteNumY - 69) /12);
+		Oscillator2->SetFrequency((float)freq2);
 		errorText->Text = "Pos:(" + x.ToString() + "," + y.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
 	}
 }
 
 int Xaudio2Test::MainPage::GetTone(double pointer, double min, double max, double maxPointer)
 {
-	return (int)(min + ((min - max)*(pointer/maxPointer)));
+	return (int)(min + ((max - min)*(pointer/maxPointer)));
 }
