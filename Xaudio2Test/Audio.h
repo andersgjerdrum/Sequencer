@@ -29,10 +29,12 @@ namespace Xaudio2Test
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;
 		IXAudio2SourceVoice * pSourceVoice;
+		bool ContinuousPlay;
 	public:
 		void SetFrequency(float freq);
         void SetAmplitude(float amp);
-		Audio(IXAudio2* pXAudio2);
+		void Audio::StartFillSubmitStop();
+		Audio(IXAudio2* pXAudio2, bool Continuous);
 		~Audio();
 
 		//Callbacks requred for IXAudio2VoiceCallback
@@ -45,6 +47,7 @@ namespace Xaudio2Test
         void _stdcall OnVoiceError(void*, HRESULT){}
 	private:
 		void FillAndSubmit(int startIndex, int count);
+
 
 	};
 

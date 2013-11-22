@@ -14,10 +14,10 @@ namespace Xaudio2Test
 	/// </summary>
 	public ref class MainPage sealed
 	{
+
 	 private:
 		Audio* Oscillator1;
 		Audio* Oscillator2;
-
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;
 	public:
@@ -30,5 +30,6 @@ namespace Xaudio2Test
 		void Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 		void Canvas_PointerMoved_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 		int GetTone(double pointer, double min, double max, double maxPointer);
+		void Xaudio2Test::MainPage::DispatcherTimer_Tick(Platform::Object^ sender, Platform::Object^ e);
 	};
 }

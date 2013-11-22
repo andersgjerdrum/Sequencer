@@ -4,7 +4,7 @@
 using Platform::COMException;
 using namespace Xaudio2Test;
 
-Audio::Audio(IXAudio2* pXAudio2)
+Audio::Audio(IXAudio2* pXAudio2, bool Continuous)
 {
 	
     // Create a source voice
@@ -28,9 +28,12 @@ Audio::Audio(IXAudio2* pXAudio2)
     index = 0;
     angle = 0;
     angleIncrement = 0;
-
+	ContinuousPlay = Continuous;
     // Start the voice playing
-    pSourceVoice->Start();
+	if(Continuous)
+	{
+		pSourceVoice->Start();
+	}
 }
 
 Audio::~Audio()
@@ -51,7 +54,7 @@ void Audio::SetAmplitude(float amp)
 
 void _stdcall Audio::OnVoiceProcessingPassStart(UINT32 bytesRequired)
 {
-    if (bytesRequired == 0)
+    if (bytesRequired == 0 || !ContinuousPlay)
         return;
 
     int startIndex = index;
@@ -89,6 +92,10 @@ void Audio::FillAndSubmit(int startIndex, int count)
     if (FAILED(hr))
         throw ref new COMException(hr, "SubmitSourceBuffer");
 }
-
+void Audio::StartFillSubmitStop()
+{
+    pSourceVoice->Start();
+	FillAndSubmit(0,BUFFER_LENGTH);
+}
 
 

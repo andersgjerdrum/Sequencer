@@ -28,6 +28,13 @@ MainPage::MainPage()
 	InitializeComponent();
 	/// Create an IXAudio2 object
     HRESULT hr = XAudio2Create(&pXAudio2);
+	
+	DispatcherTimer^  SequenceTimer = ref new DispatcherTimer;
+    SequenceTimer->Tick += ref new EventHandler<Object^>(this, &Xaudio2Test::MainPage::DispatcherTimer_Tick);
+    TimeSpan t;
+    t.Duration=10000000/2;
+    SequenceTimer->Interval = t;
+    SequenceTimer->Start();
 
     if (FAILED(hr))
         ref new COMException(hr, "XAudio2Create failure");
@@ -38,12 +45,16 @@ MainPage::MainPage()
     if (FAILED(hr))
         ref new COMException(hr, "CreateMasteringVoice failure");
 
-	Oscillator1 = new Audio(pXAudio2.Get());
-	Oscillator2 = new Audio(pXAudio2.Get());
+	Oscillator1 = new Audio(pXAudio2.Get(),false);
+	Oscillator2 = new Audio(pXAudio2.Get(),false);
 
 }
 
-
+void Xaudio2Test::MainPage::DispatcherTimer_Tick(Platform::Object^ sender, Platform::Object^ e)
+{
+  	Oscillator1->StartFillSubmitStop();
+	Oscillator2->StartFillSubmitStop();
+}
 /// <summary>
 /// Invoked when this page is about to be displayed in a Frame.
 /// </summary>
@@ -70,6 +81,8 @@ void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Wi
 		Oscillator2->SetFrequency((float)freq);
 		errorText->Text = "Pos:(" + x.ToString() + "," + y.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
 	}
+	Oscillator1->StartFillSubmitStop();
+	Oscillator2->StartFillSubmitStop();
 
 }
 
