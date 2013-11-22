@@ -7,6 +7,8 @@
 
 #include "MainPage.g.h"
 #include "Audio.h"
+using namespace Windows::UI::Xaml;
+
 namespace Xaudio2Test
 {
 	/// <summary>
@@ -16,6 +18,7 @@ namespace Xaudio2Test
 	{
 
 	 private:
+		DispatcherTimer^ SequenceTimer;
 		Audio* Oscillator1;
 		Audio* Oscillator2;
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;

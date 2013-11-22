@@ -29,12 +29,7 @@ MainPage::MainPage()
 	/// Create an IXAudio2 object
     HRESULT hr = XAudio2Create(&pXAudio2);
 	
-	DispatcherTimer^  SequenceTimer = ref new DispatcherTimer;
-    SequenceTimer->Tick += ref new EventHandler<Object^>(this, &Xaudio2Test::MainPage::DispatcherTimer_Tick);
-    TimeSpan t;
-    t.Duration=10000000/2;
-    SequenceTimer->Interval = t;
-    SequenceTimer->Start();
+	
 
     if (FAILED(hr))
         ref new COMException(hr, "XAudio2Create failure");
@@ -83,6 +78,14 @@ void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Wi
 	}
 	Oscillator1->StartFillSubmitStop();
 	Oscillator2->StartFillSubmitStop();
+	if(SequenceTimer == nullptr){
+		SequenceTimer = ref new DispatcherTimer();
+		SequenceTimer->Tick += ref new EventHandler<Object^>(this, &Xaudio2Test::MainPage::DispatcherTimer_Tick);
+		TimeSpan t;
+		t.Duration=10000000/2;
+		SequenceTimer->Interval = t;
+		SequenceTimer->Start();
+	}
 
 }
 
