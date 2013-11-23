@@ -2,7 +2,6 @@ Debug
 *.suo
 *.sdf
 *.opensdf
+Xaudio2Test/*.vcxproj*
 ipch
 Xaudio2Test/Generated Files/*
-*.vcxproj.user
-*.vcxproj*
