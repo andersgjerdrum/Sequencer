@@ -5,3 +5,4 @@ Debug
 ipch
 Xaudio2Test/Generated Files/*
 *.vcxproj.user
+*.vcxproj*
