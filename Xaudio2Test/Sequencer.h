@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include <list>
 
 using namespace Windows::Foundation;
 using namespace Platform;
@@ -9,10 +10,13 @@ namespace Xaudio2Test
 	public ref class Sequencer sealed
 	{
 	private:
-		void (*func)(Platform::Object^ sender, Platform::Object^ e);
 		int timeSignatureSeconds;
+		void (*function)(Platform::Object^ sender, Platform::Object^ e);
+		Concurrency::task<void> *asynctask;
+		int CurrentTime;
+		int TimeResolution;
 		DispatcherTimer^ SequenceTimer;
-
+		std::list<double> list;
 		
 	internal:
 		Sequencer(int TimeSeconds,int BPM, void (*function)(Platform::Object^ sender, Platform::Object^ e));
