@@ -7,6 +7,7 @@
 
 #include "MainPage.g.h"
 #include "Audio.h"
+#include "Sequencer.h"
 using namespace Windows::UI::Xaml;
 
 namespace Xaudio2Test
@@ -19,6 +20,7 @@ namespace Xaudio2Test
 
 	 private:
 		DispatcherTimer^ SequenceTimer;
+		Sequencer^ sequencer;
 		Audio* Oscillator1;
 		Audio* Oscillator2;
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
@@ -30,6 +32,7 @@ namespace Xaudio2Test
 		virtual void OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs^ e) override;
 
 	private:
+		void Xaudio2Test::MainPage::Dummy(Platform::Object^ sender, Platform::Object^ e);
 		void Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 		void Canvas_PointerMoved_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 		int GetTone(double pointer, double min, double max, double maxPointer);

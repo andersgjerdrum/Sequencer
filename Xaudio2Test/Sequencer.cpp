@@ -9,23 +9,23 @@ using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::UI::Xaml;
 
-Sequencer::Sequencer(int TimeSeconds, int resolution, void (*function)(Platform::Object^ sender, Platform::Object^ e))
+Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ func)
 {
-	asynctask = Concurrency::task<void>([](void (*func)(Platform::Object^ sender, Platform::Object^ e),Platform::Object^ sender, Platform::Object^ e)
-		{
-       			func(sender,e);
-		});
-	function = function;
+
+	sequencercorefunc = func;
 	timeSignatureSeconds = TimeSeconds;
 	SequenceTimer = ref new DispatcherTimer();
 	SequenceTimer->Tick += ref new EventHandler<Object^>(this, &Sequencer::WrapperFunc);
 	TimeSpan t;
+	lock = CreateMutexEx(nullptr,nullptr,0,SYNCHRONIZE);
 	//nano second resolution
 	t.Duration = (10000000L/resolution);
 	SequenceTimer->Interval = t;
 	CurrentTime = 0;
 	TimeResolution = resolution;
 	SequenceTimer->Start();
+	OutputDebugString(L"Start Of Sequencer");
+
 
 }
 void Sequencer::WrapperFunc(Platform::Object^ sender, Platform::Object^ e)
@@ -35,25 +35,38 @@ void Sequencer::WrapperFunc(Platform::Object^ sender, Platform::Object^ e)
 	{
 		CurrentTime = 0;
 	}
-	if(list.size < 0)
+	if(list.size() < 0)
 	{
 		return;
 	}
 	//dotimestuff
+	WaitForSingleObjectEx(lock,INFINITE,false);
 	std::list<double>::iterator findIter = std::find(list.begin(), list.end(), CurrentTime);
+	ReleaseMutex(lock);
 	if(*findIter == CurrentTime)
 	{
-		//todo: figure out how to make async
+		sequencercorefunc(sender, e);
 	}
 	CurrentTime++;
 }
 void Sequencer::AddBeat()
 {
-
+	//do we need duplication
+	WaitForSingleObjectEx(lock,INFINITE,false);
+	list.push_front(CurrentTime);
+	ReleaseMutex(lock);
 }
-
 
 void Sequencer::Reset()
 {
+	WaitForSingleObjectEx(lock,INFINITE,false);
+	list.clear();
+	CurrentTime = 0;
+	ReleaseMutex(lock);
 
+}
+Sequencer::~Sequencer()
+{
+	CloseHandle(lock);
+	SequenceTimer->Stop();
 }

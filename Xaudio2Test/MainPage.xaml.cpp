@@ -6,7 +6,7 @@
 #include "pch.h"
 #include "MainPage.xaml.h"
 #include "Audio.h"
-
+#include "Sequencer.h"
 using namespace Xaudio2Test;
 
 using namespace Platform;
@@ -28,7 +28,13 @@ MainPage::MainPage()
 	InitializeComponent();
 	/// Create an IXAudio2 object
     HRESULT hr = XAudio2Create(&pXAudio2);
+	sequencer = ref new Sequencer(2,140,
+		ref new SequencerExecuteDelegate([this](Platform::Object^ sender, Platform::Object^ e)
+	{
+		Xaudio2Test::MainPage::Dummy(sender,e);
 	
+	}));
+
 	
 
     if (FAILED(hr))
@@ -59,7 +65,10 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 {
 	(void) e;	// Unused parameter
 }
-
+void Xaudio2Test::MainPage::Dummy(Platform::Object^ sender, Platform::Object^ e)
+{
+	OutputDebugString(L"Doing stuff /n");
+}
 
 
 void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)

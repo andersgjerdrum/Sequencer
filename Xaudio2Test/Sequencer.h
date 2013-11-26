@@ -7,21 +7,24 @@ using namespace Platform;
 using namespace Windows::UI::Xaml;
 namespace Xaudio2Test 
 {
+	public delegate void SequencerExecuteDelegate (Platform::Object^ sender, Platform::Object^ e);
 	public ref class Sequencer sealed
 	{
 	private:
 		int timeSignatureSeconds;
-		void (*function)(Platform::Object^ sender, Platform::Object^ e);
-		Concurrency::task<void> *asynctask;
+		SequencerExecuteDelegate^ sequencercorefunc;
 		int CurrentTime;
 		int TimeResolution;
+		HANDLE lock;
 		DispatcherTimer^ SequenceTimer;
 		std::list<double> list;
 		
 	internal:
-		Sequencer(int TimeSeconds,int BPM, void (*function)(Platform::Object^ sender, Platform::Object^ e));
+	Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ func);
 		void Sequencer::Reset();
 		void AddBeat();
+	public:
+		virtual ~Sequencer();
 	private:
 		void WrapperFunc(Platform::Object^ sender, Platform::Object^ e);
 	};
