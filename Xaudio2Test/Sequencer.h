@@ -18,7 +18,7 @@ namespace Xaudio2Test
 		HANDLE lock;
 		DispatcherTimer^ SequenceTimer;
 		std::list<int> list;
-		
+		int Speed;
 	internal:
 	Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ func);
 		void Sequencer::Reset();

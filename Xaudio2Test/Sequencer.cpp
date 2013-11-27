@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <list>
 #include <ppltasks.h>
+#define LENIANCY (1/4)
+#define ONESECOND 10000000L
 using namespace Xaudio2Test;
 using namespace Concurrency;
 using namespace Platform;
@@ -19,7 +21,8 @@ Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ 
 	TimeSpan t;
 	lock = CreateMutexEx(nullptr,nullptr,0,SYNCHRONIZE);
 	//nano second resolution
-	t.Duration = (10000000L/resolution);
+	Speed = ONESECOND/resolution;
+	t.Duration = Speed;
 	SequenceTimer->Interval = t;
 	CurrentTime = 0;
 	TimeResolution = resolution;
@@ -60,17 +63,24 @@ void Sequencer::AddBeat()
 	int Pushable = CurrentTime;
 	if(list.end() != std::find(list.begin(), list.end(), CurrentTime))
 	{
-		if(list.end() == std::find(list.begin(), list.end(), (CurrentTime + 1) % timeSignatureSeconds * TimeResolution)){
-			Pushable = (CurrentTime + 1) % timeSignatureSeconds * TimeResolution;
-		}
-		else if(list.end() == std::find(list.begin(), list.end(), (CurrentTime - 1) % timeSignatureSeconds * TimeResolution)){
-			Pushable = (CurrentTime - 1) % timeSignatureSeconds * TimeResolution;
-		}
-		else
-		{
-			return;
+		Pushable = -1;
+		int Leniancy_In_BeatStrokes = (int) LENIANCY*ONESECOND / Speed; 
+		for(int i = 0; i < Leniancy_In_BeatStrokes; i++){
+			if(list.end() == std::find(list.begin(), list.end(), (CurrentTime + i) % timeSignatureSeconds * TimeResolution))
+			{
+				Pushable = (CurrentTime + i) % timeSignatureSeconds * TimeResolution;
+			}
+			else if(list.end() == std::find(list.begin(), list.end(), (CurrentTime - i) % timeSignatureSeconds * TimeResolution))
+			{
+				Pushable = (CurrentTime - i) % timeSignatureSeconds * TimeResolution;
+			}
 		}
 	}
+
+	if(Pushable == -1){
+		return;
+	}
+	
 	WaitForSingleObjectEx(lock,INFINITE,false);
 	list.push_front(Pushable);
 	ReleaseMutex(lock);

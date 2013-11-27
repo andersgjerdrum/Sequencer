@@ -28,7 +28,7 @@ MainPage::MainPage()
 	InitializeComponent();
 	/// Create an IXAudio2 object
     HRESULT hr = XAudio2Create(&pXAudio2);
-	sequencer = ref new Sequencer(2,2,
+	sequencer = ref new Sequencer(2,4,
 		ref new SequencerExecuteDelegate([this](Platform::Object^ sender, Platform::Object^ e)
 	{
 		Xaudio2Test::MainPage::Dummy(sender,e);
