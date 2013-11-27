@@ -30,33 +30,55 @@ Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ 
 }
 void Sequencer::WrapperFunc(Platform::Object^ sender, Platform::Object^ e)
 {
-	OutputDebugString(L"Start Of beat");
 	if(CurrentTime >= timeSignatureSeconds * TimeResolution)
 	{
 		CurrentTime = 0;
 	}
-	if(list.size() < 0)
+	
+	CurrentTime++;
+	if(list.size() <= 0)
 	{
 		return;
 	}
-	//dotimestuff
 	WaitForSingleObjectEx(lock,INFINITE,false);
-	std::list<double>::iterator findIter = std::find(list.begin(), list.end(), CurrentTime);
+	std::list<int>::iterator findIter = std::find(list.begin(), list.end(), CurrentTime);
 	ReleaseMutex(lock);
-	if(*findIter == CurrentTime)
+	if(findIter == list.end()){
+		return;
+	}
+	if(*findIter <= CurrentTime)
 	{
 		sequencercorefunc(sender, e);
 	}
-	CurrentTime++;
 }
 void Sequencer::AddBeat()
 {
 	//do we need duplication
+	if(list.size() >= timeSignatureSeconds * TimeResolution){
+		return;
+	}
+	int Pushable = CurrentTime;
+	if(list.end() != std::find(list.begin(), list.end(), CurrentTime))
+	{
+		if(list.end() == std::find(list.begin(), list.end(), (CurrentTime + 1) % timeSignatureSeconds * TimeResolution)){
+			Pushable = (CurrentTime + 1) % timeSignatureSeconds * TimeResolution;
+		}
+		else if(list.end() == std::find(list.begin(), list.end(), (CurrentTime - 1) % timeSignatureSeconds * TimeResolution)){
+			Pushable = (CurrentTime - 1) % timeSignatureSeconds * TimeResolution;
+		}
+		else
+		{
+			return;
+		}
+	}
 	WaitForSingleObjectEx(lock,INFINITE,false);
-	list.push_front(CurrentTime);
+	list.push_front(Pushable);
 	ReleaseMutex(lock);
 }
+void Sequencer::AddBeatPosition(int Position)
+{
 
+}
 void Sequencer::Reset()
 {
 	WaitForSingleObjectEx(lock,INFINITE,false);
@@ -67,6 +89,6 @@ void Sequencer::Reset()
 }
 Sequencer::~Sequencer()
 {
-	CloseHandle(lock);
 	SequenceTimer->Stop();
+	CloseHandle(lock);
 }

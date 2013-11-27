@@ -17,12 +17,13 @@ namespace Xaudio2Test
 		int TimeResolution;
 		HANDLE lock;
 		DispatcherTimer^ SequenceTimer;
-		std::list<double> list;
+		std::list<int> list;
 		
 	internal:
 	Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ func);
 		void Sequencer::Reset();
 		void AddBeat();
+		void Sequencer::AddBeatPosition(int Position);
 	public:
 		virtual ~Sequencer();
 	private:

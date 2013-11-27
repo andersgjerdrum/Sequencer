@@ -28,7 +28,7 @@ MainPage::MainPage()
 	InitializeComponent();
 	/// Create an IXAudio2 object
     HRESULT hr = XAudio2Create(&pXAudio2);
-	sequencer = ref new Sequencer(2,140,
+	sequencer = ref new Sequencer(2,2,
 		ref new SequencerExecuteDelegate([this](Platform::Object^ sender, Platform::Object^ e)
 	{
 		Xaudio2Test::MainPage::Dummy(sender,e);
@@ -67,12 +67,15 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 }
 void Xaudio2Test::MainPage::Dummy(Platform::Object^ sender, Platform::Object^ e)
 {
-	OutputDebugString(L"Doing stuff /n");
+	OutputDebugString(L"Doing stuff \n");
+	Oscillator1->StartFillSubmitStop();
+	Oscillator2->StartFillSubmitStop();
 }
 
 
 void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
+	sequencer->AddBeat();
 	PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
 	int x = p->RawPosition.X;
 	int y = p->RawPosition.Y;
@@ -84,35 +87,28 @@ void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Wi
 		double freq2 = GetTone(y,110,440,RectCanvas->RenderSize.Height) *pow(2,(noteNum - 69) /12);
 		Oscillator2->SetFrequency((float)freq);
 		errorText->Text = "Pos:(" + x.ToString() + "," + y.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
-	}
-	Oscillator1->StartFillSubmitStop();
-	Oscillator2->StartFillSubmitStop();
-	if(SequenceTimer == nullptr){
-		SequenceTimer = ref new DispatcherTimer();
-		SequenceTimer->Tick += ref new EventHandler<Object^>(this, &Xaudio2Test::MainPage::DispatcherTimer_Tick);
-		TimeSpan t;
-		t.Duration=10000000/2;
-		SequenceTimer->Interval = t;
-		SequenceTimer->Start();
+		Oscillator1->StartFillSubmitStop();
+		Oscillator2->StartFillSubmitStop();
+
 	}
 
 }
 
 void Xaudio2Test::MainPage::Canvas_PointerMoved_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
-	int x = p->RawPosition.X;
-	int y = p->RawPosition.Y;
-	if(Oscillator1 != nullptr && Oscillator2 != nullptr)
-	{
-		int noteNumX = 50;
-		int noteNumY = 50;
-		double freq = GetTone(x,110,880,RectCanvas->RenderSize.Width) *pow(2,(noteNumX - 69) /12);
-		Oscillator1->SetFrequency((float)freq);
-		double freq2 = GetTone(y,110,880,RectCanvas->RenderSize.Height) *pow(2,(noteNumY - 69) /12);
-		Oscillator2->SetFrequency((float)freq2);
-		errorText->Text = "Pos:(" + x.ToString() + "," + y.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
-	}
+	//PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
+	//int x = p->RawPosition.X;
+	//int y = p->RawPosition.Y;
+	//if(Oscillator1 != nullptr && Oscillator2 != nullptr)
+	//{
+	//	int noteNumX = 50;
+	//	int noteNumY = 50;
+	//	double freq = GetTone(x,110,880,RectCanvas->RenderSize.Width) *pow(2,(noteNumX - 69) /12);
+	//	Oscillator1->SetFrequency((float)freq);
+	//	double freq2 = GetTone(y,110,880,RectCanvas->RenderSize.Height) *pow(2,(noteNumY - 69) /12);
+	//	Oscillator2->SetFrequency((float)freq2);
+	//	errorText->Text = "Pos:(" + x.ToString() + "," + y.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
+	//}
 }
 
 int Xaudio2Test::MainPage::GetTone(double pointer, double min, double max, double maxPointer)
