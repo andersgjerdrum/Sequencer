@@ -4,7 +4,7 @@
 //
 
 #pragma once
-
+#include "BeatPoint.h"
 #include "MainPage.g.h"
 #include "Audio.h"
 #include "Sequencer.h"
@@ -23,6 +23,8 @@ namespace Xaudio2Test
 		Sequencer^ sequencer;
 		Audio* Oscillator1;
 		Audio* Oscillator2;
+		int Stopwatch;
+
 		BeatPoints sequenceOfBeats;
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;

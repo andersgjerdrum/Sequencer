@@ -1,15 +1,16 @@
 #pragma once
 #include "pch.h"
-#include <list>
+#include <map>
 
 using namespace Windows::Foundation;
 using namespace Platform;
 using namespace Windows::UI::Xaml;
-
+using namespace std;
 namespace Xaudio2Test 
 {
 	class BeatPoint{
 	public:
+		BeatPoint();
 		BeatPoint(int x, int y, int sequenceId);
 		int Xaxis;
 		int Yaxis;
@@ -21,6 +22,8 @@ namespace Xaudio2Test
 		BeatPoints();
 		void AddPoint(BeatPoint bp);
 		BeatPoint Find(int sequenceId);
+		HANDLE lock;
+
 	private:
 		std::map<int,BeatPoint> pointStorage;
 

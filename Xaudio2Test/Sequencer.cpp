@@ -19,26 +19,22 @@ Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ 
 	SequenceTimer = ref new DispatcherTimer();
 	SequenceTimer->Tick += ref new EventHandler<Object^>(this, &Sequencer::WrapperFunc);
 	TimeSpan t;
+	StopWatch = 0;
 	lock = CreateMutexEx(nullptr,nullptr,0,SYNCHRONIZE);
 	//nano second resolution
 	Speed = ONESECOND/resolution;
 	t.Duration = Speed;
 	SequenceTimer->Interval = t;
 	CurrentTime = 0;
+	LastTime = 0;
 	TimeResolution = resolution;
 	SequenceTimer->Start();
-	OutputDebugString(L"Start Of Sequencer");
-
-
 }
 void Sequencer::WrapperFunc(Platform::Object^ sender, Platform::Object^ e)
 {
-	if(CurrentTime >= timeSignatureSeconds * TimeResolution)
-	{
-		CurrentTime = 0;
-	}
+	LastTime = CurrentTime;
+	CurrentTime = (CurrentTime + 1 ) % (timeSignatureSeconds * TimeResolution);
 	
-	CurrentTime++;
 	if(list.size() <= 0)
 	{
 		return;
@@ -51,6 +47,14 @@ void Sequencer::WrapperFunc(Platform::Object^ sender, Platform::Object^ e)
 	}
 	if(*findIter <= CurrentTime)
 	{
+		int pre = StopWatch;
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+		StopWatch = st.wMilliseconds + (st.wSecond * 1000);
+
+		int OffBy = (StopWatch - pre) - (((1000/TimeResolution)*((CurrentTime - LastTime) % (timeSignatureSeconds * TimeResolution))));
+		OutputDebugString(OffBy.ToString()->Data());
+		OutputDebugString(L"\n");
 		sequencercorefunc(*findIter);
 	}
 }
@@ -66,13 +70,13 @@ int Sequencer::AddBeat()
 		Pushable = -1;
 		int Leniancy_In_BeatStrokes = (int) LENIANCY*ONESECOND / Speed; 
 		for(int i = 0; i < Leniancy_In_BeatStrokes; i++){
-			if(list.end() == std::find(list.begin(), list.end(), (CurrentTime + i) % timeSignatureSeconds * TimeResolution))
+			if(list.end() == std::find(list.begin(), list.end(), (CurrentTime + i) % (timeSignatureSeconds * TimeResolution)))
 			{
-				Pushable = (CurrentTime + i) % timeSignatureSeconds * TimeResolution;
+				Pushable = (CurrentTime + i) % (timeSignatureSeconds * TimeResolution);
 			}
-			else if(list.end() == std::find(list.begin(), list.end(), (CurrentTime - i) % timeSignatureSeconds * TimeResolution))
+			else if(list.end() == std::find(list.begin(), list.end(), (CurrentTime - i) % (timeSignatureSeconds * TimeResolution)))
 			{
-				Pushable = (CurrentTime - i) % timeSignatureSeconds * TimeResolution;
+				Pushable = (CurrentTime - i) % (timeSignatureSeconds * TimeResolution );
 			}
 		}
 	}

@@ -14,6 +14,8 @@ namespace Xaudio2Test
 		int timeSignatureSeconds;
 		SequencerExecuteDelegate^ sequencercorefunc;
 		int CurrentTime;
+		int LastTime;
+		int StopWatch;
 		int TimeResolution;
 		HANDLE lock;
 		DispatcherTimer^ SequenceTimer;
