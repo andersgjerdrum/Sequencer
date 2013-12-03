@@ -33,6 +33,7 @@
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Sequencer.cpp" />
+    <ClCompile Include="BeatPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Sequencer.h" />
+    <ClInclude Include="BeatPoint.h" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />

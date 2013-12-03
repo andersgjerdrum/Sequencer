@@ -44,5 +44,6 @@ namespace SequencerApp
 		bool m_lastPointValid;
 		
 		BasicTimer^ m_timer;
+		void SwapChainPanel_PointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 	};
 }

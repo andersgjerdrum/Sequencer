@@ -3,4 +3,4 @@ Debug
 *.sdf
 *.opensdf
 ipch
-Xaudio2Test/Generated Files/*
+*/Generated Files/*

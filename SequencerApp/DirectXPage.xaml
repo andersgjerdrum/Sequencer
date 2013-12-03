@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <SwapChainBackgroundPanel x:Name="SwapChainPanel" PointerMoved="OnPointerMoved" PointerReleased="OnPointerReleased">
+    <SwapChainBackgroundPanel x:Name="SwapChainPanel" PointerMoved="OnPointerMoved" PointerReleased="OnPointerReleased" PointerPressed="SwapChainPanel_PointerPressed">
         <TextBlock x:Name="SimpleTextBlock" HorizontalAlignment="Center" FontSize="42" Height="72" Text="Hello, XAML!" Margin="0,0,0,50"/>
     </SwapChainBackgroundPanel>
     <Page.BottomAppBar>

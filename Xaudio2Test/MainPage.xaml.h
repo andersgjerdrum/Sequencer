@@ -23,6 +23,7 @@ namespace Xaudio2Test
 		Sequencer^ sequencer;
 		Audio* Oscillator1;
 		Audio* Oscillator2;
+		BeatPoints sequenceOfBeats;
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;
 	public:
@@ -32,7 +33,7 @@ namespace Xaudio2Test
 		virtual void OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs^ e) override;
 
 	private:
-		void Xaudio2Test::MainPage::Dummy(Platform::Object^ sender, Platform::Object^ e);
+		void Xaudio2Test::MainPage::Dummy(int sequenceId);
 		void Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 		void Canvas_PointerMoved_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 		int GetTone(double pointer, double min, double max, double maxPointer);

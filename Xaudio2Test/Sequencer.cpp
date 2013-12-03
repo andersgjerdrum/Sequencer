@@ -51,14 +51,14 @@ void Sequencer::WrapperFunc(Platform::Object^ sender, Platform::Object^ e)
 	}
 	if(*findIter <= CurrentTime)
 	{
-		sequencercorefunc(sender, e);
+		sequencercorefunc(*findIter);
 	}
 }
-void Sequencer::AddBeat()
+int Sequencer::AddBeat()
 {
 	//do we need duplication
 	if(list.size() >= timeSignatureSeconds * TimeResolution){
-		return;
+		return -1;
 	}
 	int Pushable = CurrentTime;
 	if(list.end() != std::find(list.begin(), list.end(), CurrentTime))
@@ -78,12 +78,13 @@ void Sequencer::AddBeat()
 	}
 
 	if(Pushable == -1){
-		return;
+		return -1;
 	}
 	
 	WaitForSingleObjectEx(lock,INFINITE,false);
 	list.push_front(Pushable);
 	ReleaseMutex(lock);
+	return Pushable;
 }
 void Sequencer::AddBeatPosition(int Position)
 {

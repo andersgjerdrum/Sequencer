@@ -6,6 +6,7 @@
 #include "pch.h"
 #include "MainPage.xaml.h"
 #include "Audio.h"
+#include "BeatPoint.h"
 #include "Sequencer.h"
 using namespace Xaudio2Test;
 
@@ -29,9 +30,9 @@ MainPage::MainPage()
 	/// Create an IXAudio2 object
     HRESULT hr = XAudio2Create(&pXAudio2);
 	sequencer = ref new Sequencer(2,4,
-		ref new SequencerExecuteDelegate([this](Platform::Object^ sender, Platform::Object^ e)
+		ref new SequencerExecuteDelegate([this](int sequenceId)
 	{
-		Xaudio2Test::MainPage::Dummy(sender,e);
+		Xaudio2Test::MainPage::Dummy(sequenceId);
 	
 	}));
 
@@ -65,9 +66,9 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 {
 	(void) e;	// Unused parameter
 }
-void Xaudio2Test::MainPage::Dummy(Platform::Object^ sender, Platform::Object^ e)
+void Xaudio2Test::MainPage::Dummy(int sequenceId)
 {
-	OutputDebugString(L"Doing stuff \n");
+	OutputDebugStringW(sequenceId.ToString()->Data());
 	Oscillator1->StartFillSubmitStop();
 	Oscillator2->StartFillSubmitStop();
 }
@@ -75,7 +76,7 @@ void Xaudio2Test::MainPage::Dummy(Platform::Object^ sender, Platform::Object^ e)
 
 void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	sequencer->AddBeat();
+	int dataPoint = sequencer->AddBeat();
 	PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
 	int x = p->RawPosition.X;
 	int y = p->RawPosition.Y;

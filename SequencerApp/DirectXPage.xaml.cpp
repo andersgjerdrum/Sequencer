@@ -139,3 +139,9 @@ void DirectXPage::LoadInternalState(IPropertySet^ state)
 {
 	m_renderer->LoadInternalState(state);
 }
+
+
+void SequencerApp::DirectXPage::SwapChainPanel_PointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
+{
+	
+}

@@ -7,7 +7,7 @@ using namespace Platform;
 using namespace Windows::UI::Xaml;
 namespace Xaudio2Test 
 {
-	public delegate void SequencerExecuteDelegate (Platform::Object^ sender, Platform::Object^ e);
+	public delegate void SequencerExecuteDelegate (int SequenceId);
 	public ref class Sequencer sealed
 	{
 	private:
@@ -22,7 +22,7 @@ namespace Xaudio2Test
 	internal:
 	Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ func);
 		void Sequencer::Reset();
-		void AddBeat();
+		int AddBeat();
 		void Sequencer::AddBeatPosition(int Position);
 	public:
 		virtual ~Sequencer();
