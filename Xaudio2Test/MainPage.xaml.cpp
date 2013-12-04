@@ -67,27 +67,33 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 {
 	(void) e;	// Unused parameter
 }
+/*Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([this](){
+		
+	}));*/
 void Xaudio2Test::MainPage::Dummy(int sequenceId)
 {
-	int pre = Stopwatch;
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	Stopwatch = st.wMilliseconds + (st.wSecond * 1000);
-	int diff = Stopwatch - pre;
-	errorText->Text = diff.ToString();
+	Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([this,sequenceId](){
 
-	BeatPoint bp = sequenceOfBeats.Find(sequenceId);
-	if(Oscillator1 != nullptr && Oscillator2 != nullptr)
-	{
-		int noteNum = 50;
-		double freq = GetTone(bp.Xaxis,110,440,RectCanvas->RenderSize.Width) *pow(2,(noteNum - 69) /12);
-		Oscillator1->SetFrequency((float)freq);
-		double freq2 = GetTone(bp.Yaxis,110,440,RectCanvas->RenderSize.Height) *pow(2,(noteNum - 69) /12);
-		Oscillator2->SetFrequency((float)freq);
-		//errorText->Text = "Pos:(" + bp.Xaxis.ToString() + "," + bp.Yaxis.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
-		Oscillator1->StartFillSubmitStop();
-		Oscillator2->StartFillSubmitStop();
-	}
+		int pre = Stopwatch;
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+		Stopwatch = st.wMilliseconds + (st.wSecond * 1000);
+		int diff = Stopwatch - pre;
+		errorText->Text = diff.ToString();
+
+		BeatPoint bp = sequenceOfBeats.Find(sequenceId);
+		if(Oscillator1 != nullptr && Oscillator2 != nullptr)
+		{
+			int noteNum = 50;
+			double freq = GetTone(bp.Xaxis,110,440,RectCanvas->RenderSize.Width) *pow(2,(noteNum - 69) /12);
+			Oscillator1->SetFrequency((float)freq);
+			double freq2 = GetTone(bp.Yaxis,110,440,RectCanvas->RenderSize.Height) *pow(2,(noteNum - 69) /12);
+			Oscillator2->SetFrequency((float)freq);
+			//errorText->Text = "Pos:(" + bp.Xaxis.ToString() + "," + bp.Yaxis.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
+			Oscillator1->StartFillSubmitStop();
+			Oscillator2->StartFillSubmitStop();
+		}
+	}));
 }
 
 
