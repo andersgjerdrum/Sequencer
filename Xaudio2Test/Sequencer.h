@@ -15,8 +15,9 @@ namespace Xaudio2Test
 		SequencerExecuteDelegate^ sequencercorefunc;
 		int CurrentTime;
 		int LastTime;
-		int StopWatch;
+		double StopWatch;
 		int TimeResolution;
+		double CumulativeOfBy;
 		HANDLE lock;
 		DispatcherTimer^ SequenceTimer;
 		std::list<int> list;

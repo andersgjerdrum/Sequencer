@@ -29,10 +29,11 @@ MainPage::MainPage()
 	InitializeComponent();
 	/// Create an IXAudio2 object
     HRESULT hr = XAudio2Create(&pXAudio2);
-	sequencer = ref new Sequencer(2,4,
-		ref new SequencerExecuteDelegate([this](int sequenceId)
+	sequencer = ref new Sequencer(2,4, ref new SequencerExecuteDelegate([this](int sequenceId)
 	{
-		Xaudio2Test::MainPage::Dummy(sequenceId);
+			Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([this,sequenceId](){
+				Xaudio2Test::MainPage::Dummy(sequenceId);
+			}));
 	
 	}));
 	
@@ -72,11 +73,11 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 	}));*/
 void Xaudio2Test::MainPage::Dummy(int sequenceId)
 {
-	Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([this,sequenceId](){
 
 		int pre = Stopwatch;
 		SYSTEMTIME st;
 		GetLocalTime(&st);
+		
 		Stopwatch = st.wMilliseconds + (st.wSecond * 1000);
 		int diff = Stopwatch - pre;
 		errorText->Text = diff.ToString();
@@ -93,7 +94,7 @@ void Xaudio2Test::MainPage::Dummy(int sequenceId)
 			Oscillator1->StartFillSubmitStop();
 			Oscillator2->StartFillSubmitStop();
 		}
-	}));
+
 }
 
 

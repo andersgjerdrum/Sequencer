@@ -35,7 +35,7 @@ namespace Xaudio2Test
 		virtual void OnNavigatedTo(Windows::UI::Xaml::Navigation::NavigationEventArgs^ e) override;
 
 	private:
-		void Xaudio2Test::MainPage::Dummy(int sequenceId);
+		void Dummy(int sequenceId);
 		void Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 		void Canvas_PointerMoved_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 		int GetTone(double pointer, double min, double max, double maxPointer);

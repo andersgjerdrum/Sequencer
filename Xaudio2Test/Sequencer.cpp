@@ -10,7 +10,7 @@ using namespace Concurrency;
 using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::UI::Xaml;
-
+void WaitFunc(int miliseconds);
 Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ func)
 {
 
@@ -26,17 +26,25 @@ Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ 
 	LastTime = 0;
 	TimeResolution = resolution;
 	ContinueLoop = true;
-
+	CumulativeOfBy = 0;
     create_task([this] () {    
     }).then([this](){
 		while(ContinueLoop){
-			OffBy();
 			WrapperFunc();
-			int hey = OffBy();
-			concurrency::wait((1000/4));
+			CumulativeOfBy += OffBy();
+			WaitFunc((1000/4));
 		}
 	}, task_continuation_context::use_arbitrary());
 
+}
+
+void WaitFunc(int miliseconds)
+{
+	//concurrency::wait((1000/4));
+
+	HANDLE m_event;
+	m_event= CreateEventEx(NULL, NULL, CREATE_EVENT_MANUAL_RESET, EVENT_ALL_ACCESS);
+	WaitForSingleObjectEx(m_event, miliseconds, false);
 }
 void Sequencer::WrapperFunc()
 {
@@ -69,14 +77,20 @@ int Sequencer::GetDiff(int CurrentTime, int LastTime)
 }
 int Sequencer::OffBy()
 {
-	int pre = StopWatch;
+	Windows::Globalization::Calendar^ c = ref new Windows::Globalization::Calendar;
+	c->SetToNow();
+	
+
+	double pre = StopWatch;
 	SYSTEMTIME st;
 	GetLocalTime(&st);
-	StopWatch = st.wMilliseconds + (st.wSecond * 1000);
+	StopWatch = c->Nanosecond;
 
-	int OffBy = (StopWatch - pre) - (((1000/TimeResolution)* GetDiff(CurrentTime,LastTime)));
-
-	OutputDebugString(OffBy.ToString()->Data());
+	double OffBy = abs((StopWatch - pre) - (((1000000000L/(double)TimeResolution)* (double)GetDiff(CurrentTime,LastTime))));
+	float OffsetInMillI = (float)OffBy / (float)1000000L;
+	OutputDebugString(OffsetInMillI.ToString()->Data());
+	OutputDebugString(L"\n Cumulative");
+	OutputDebugString(CumulativeOfBy.ToString()->Data());
 	OutputDebugString(L"\n");
 	return OffBy;
 }
