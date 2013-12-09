@@ -22,7 +22,7 @@ namespace Xaudio2Test
 		int index;
         int angle;
         int angleIncrement;
-		static const int BUFFER_LENGTH = 1024;
+		static const int BUFFER_LENGTH = 512;
 		static const int WAVEFORM_LENGTH = 8192;
 		short waveformBuffer[BUFFER_LENGTH];
 		short * pWaveformBuffer;

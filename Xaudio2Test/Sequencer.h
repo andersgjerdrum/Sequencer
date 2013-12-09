@@ -15,18 +15,20 @@ namespace Xaudio2Test
 		SequencerExecuteDelegate^ sequencercorefunc;
 		int CurrentTime;
 		int LastTime;
-		double StopWatch;
+		LONG64 StopWatch;
 		int TimeResolution;
-		double CumulativeOfBy;
+		LONG64 CumulativeOfBy;
 		HANDLE lock;
 		DispatcherTimer^ SequenceTimer;
 		std::list<int> list;
 		int Speed;
 	internal:
-		Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ func);
-		void Sequencer::Reset();
+		Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ func);
+		void Reset();
 		int AddBeat();
-		void Sequencer::AddBeatPosition(int Position);
+		void AddBeatPosition(int Position);
+		void WaitFunc(int miliseconds);
+		LONG64 GetNanoSec();
 	public:
 		virtual ~Sequencer();
 	private:

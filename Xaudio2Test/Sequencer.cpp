@@ -4,24 +4,25 @@
 #include <list>
 #include <ppltasks.h>
 #define LENIANCY 0.25
-#define ONESECOND 10000000L
+#define ONESECONDIN100NANO 10000000L
+#define ADJUST 25
 using namespace Xaudio2Test;
 using namespace Concurrency;
 using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::UI::Xaml;
-void WaitFunc(int miliseconds);
+
+
 Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ func)
 {
 
 	sequencercorefunc = func;
 	timeSignatureSeconds = TimeSeconds;
 	
-	TimeSpan t;
 	StopWatch = 0;
 	lock = CreateMutexEx(nullptr,nullptr,0,SYNCHRONIZE);
 	//nano second resolution
-	Speed = ONESECOND/resolution;
+	Speed = ONESECONDIN100NANO/resolution;
 	CurrentTime = 0;
 	LastTime = 0;
 	TimeResolution = resolution;
@@ -30,18 +31,19 @@ Sequencer::Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ 
     create_task([this] () {    
     }).then([this](){
 		while(ContinueLoop){
+			LONG64 time =  GetNanoSec();
 			WrapperFunc();
 			CumulativeOfBy += OffBy();
-			WaitFunc((1000/4));
+			WaitFunc((1000/this->TimeResolution) - ADJUST);
+			while((GetNanoSec() - time) <  (ONESECONDIN100NANO/this->TimeResolution)){
+				continue;
+			}
 		}
 	}, task_continuation_context::use_arbitrary());
-
 }
 
-void WaitFunc(int miliseconds)
+void Sequencer::WaitFunc(int miliseconds)
 {
-	//concurrency::wait((1000/4));
-
 	HANDLE m_event;
 	m_event= CreateEventEx(NULL, NULL, CREATE_EVENT_MANUAL_RESET, EVENT_ALL_ACCESS);
 	WaitForSingleObjectEx(m_event, miliseconds, false);
@@ -77,24 +79,25 @@ int Sequencer::GetDiff(int CurrentTime, int LastTime)
 }
 int Sequencer::OffBy()
 {
-	Windows::Globalization::Calendar^ c = ref new Windows::Globalization::Calendar;
-	c->SetToNow();
-	
+	LONG64 pre = StopWatch;
+	StopWatch = GetNanoSec();
 
-	double pre = StopWatch;
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	StopWatch = c->Nanosecond;
-
-	double OffBy = abs((StopWatch - pre) - (((1000000000L/(double)TimeResolution)* (double)GetDiff(CurrentTime,LastTime))));
-	float OffsetInMillI = (float)OffBy / (float)1000000L;
+	LONG64 OffBy = (LONG64)(StopWatch - pre) - (((ONESECONDIN100NANO/(LONG64)TimeResolution)* (LONG64)GetDiff(CurrentTime,LastTime)));
+	float OffsetInMillI = (float)OffBy / (float)10000L;
+	float cuminmili = (float)CumulativeOfBy / (float)10000L;
 	OutputDebugString(OffsetInMillI.ToString()->Data());
-	OutputDebugString(L"\n Cumulative");
-	OutputDebugString(CumulativeOfBy.ToString()->Data());
+	OutputDebugString(L"\n");
+	OutputDebugString(cuminmili.ToString()->Data());
 	OutputDebugString(L"\n");
 	return OffBy;
 }
 
+LONG64 Sequencer::GetNanoSec()
+{
+	Windows::Globalization::Calendar^ c = ref new Windows::Globalization::Calendar;
+	c->SetToNow();
+	return  c->GetDateTime().UniversalTime;
+}
 int Sequencer::AddBeat()
 {
 	//do we need duplication
@@ -106,7 +109,7 @@ int Sequencer::AddBeat()
 	if(list.end() != std::find(list.begin(), list.end(), CurrentTime))
 	{
 		Pushable = -1;
-		int Leniancy_In_BeatStrokes = (int) ((LENIANCY*ONESECOND) / Speed); 
+		int Leniancy_In_BeatStrokes = (int) ((LENIANCY*ONESECONDIN100NANO) / Speed); 
 		for(int i = 1; i <= Leniancy_In_BeatStrokes; i++){
 			if(list.end() == std::find(list.begin(), list.end(), (CurrentTime + i) % (timeSignatureSeconds * TimeResolution)))
 			{
