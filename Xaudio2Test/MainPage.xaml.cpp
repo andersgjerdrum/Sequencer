@@ -29,7 +29,7 @@ MainPage::MainPage()
 	InitializeComponent();
 	/// Create an IXAudio2 object
     HRESULT hr = XAudio2Create(&pXAudio2);
-	sequencer = ref new Sequencer(2,4, ref new SequencerExecuteDelegate([this](int sequenceId)
+	sequencer = ref new Sequencer(2,4, 0.25f,ref new SequencerExecuteDelegate([this](int sequenceId)
 	{
 			Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([this,sequenceId](){
 				Xaudio2Test::MainPage::Dummy(sequenceId);

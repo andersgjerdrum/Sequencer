@@ -10,30 +10,28 @@ namespace Xaudio2Test
 	public ref class Sequencer sealed
 	{
 	private:
-		int timeSignatureSeconds;
+		int _RecurenceInterval;
 		bool ContinueLoop;
+		int Leniancy_In_BeatStrokes;
 		SequencerExecuteDelegate^ sequencercorefunc;
 		int CurrentTime;
 		int LastTime;
 		LONG64 StopWatch;
-		int TimeResolution;
-		LONG64 CumulativeOfBy;
+		int _ResolutionOverInterval;
 		HANDLE lock;
 		DispatcherTimer^ SequenceTimer;
 		std::list<int> list;
 		int Speed;
-	internal:
-		Sequencer(int TimeSeconds, int resolution, SequencerExecuteDelegate^ func);
-		void Reset();
-		int AddBeat();
-		void AddBeatPosition(int Position);
 		void WaitFunc(int miliseconds);
 		LONG64 GetNanoSec();
+		void CreateTask(void);
+	internal:
+		Sequencer(int RecurrenceInterval, int ResolutionOverInterval, float InaccuracyCoefficient, SequencerExecuteDelegate^ CoreFunctionToCall);
+		void Reset();
+		int AddBeat();
 	public:
 		virtual ~Sequencer();
 	private:
-		int GetDiff(int CurrentTime, int LastTime);
-		int OffBy();
 		void WrapperFunc();
 	};
 	
