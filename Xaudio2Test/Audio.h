@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "Sequencer.h"
 
 #define SECONDS 5
 #define SAMPLERATE 44100
@@ -30,11 +31,12 @@ namespace Xaudio2Test
 		IXAudio2MasteringVoice * pMasteringVoice;
 		IXAudio2SourceVoice * pSourceVoice;
 		bool ContinuousPlay;
+		Sequencer ^Sequencerobject;
 	public:
 		void SetFrequency(float freq);
         void SetAmplitude(float amp);
 		void Audio::StartFillSubmitStop();
-		Audio(IXAudio2* pXAudio2, bool Continuous);
+		Audio::Audio(IXAudio2* pXAudio2, bool Continuous, Sequencer ^Seq);
 		~Audio();
 
 		//Callbacks requred for IXAudio2VoiceCallback

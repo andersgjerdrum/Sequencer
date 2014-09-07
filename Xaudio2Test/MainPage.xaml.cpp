@@ -49,8 +49,8 @@ MainPage::MainPage()
     if (FAILED(hr))
         ref new COMException(hr, "CreateMasteringVoice failure");
 
-	Oscillator1 = new Audio(pXAudio2.Get(),false);
-	Oscillator2 = new Audio(pXAudio2.Get(),false);
+	Oscillator1 = new Audio(pXAudio2.Get(),false,sequencer);
+	Oscillator2 = new Audio(pXAudio2.Get(),false,sequencer);
 
 }
 

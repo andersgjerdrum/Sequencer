@@ -29,6 +29,7 @@ namespace Xaudio2Test
 		Sequencer(int RecurrenceInterval, int ResolutionOverInterval, float InaccuracyCoefficient, SequencerExecuteDelegate^ CoreFunctionToCall);
 		void Reset();
 		int AddBeat();
+		bool Sequencer::IsTime(void);
 	public:
 		virtual ~Sequencer();
 	private:

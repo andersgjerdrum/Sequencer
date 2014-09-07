@@ -34,12 +34,8 @@ void Sequencer::CreateTask(void)
 	create_task([this]() {
 	}).then([this](){
 		while (ContinueLoop){
-			LONG64 time = GetNanoSec();
 			WrapperFunc();
-			WaitFunc((1000 / this->_ResolutionOverInterval) - ADJUST);
-			while ((GetNanoSec() - time) <  (ONESECONDIN100NANO / this->_ResolutionOverInterval)){
-				continue;
-			}
+			WaitFunc((1000 / this->_ResolutionOverInterval));
 		}
 	}, task_continuation_context::use_arbitrary());
 }
@@ -71,6 +67,18 @@ void Sequencer::WrapperFunc()
 	}
 }
 
+bool Sequencer::IsTime(void)
+{
+	LONG64 time = GetNanoSec();
+	LONG64 IntervalLengthInNano = _RecurenceInterval * ONESECONDIN100NANO * 100;
+	LONG64 RelativePointInTime = time % (IntervalLengthInNano);
+	LONG64 SmallestIntervalBetweenBeats = IntervalLengthInNano / (_RecurenceInterval * _ResolutionOverInterval);
+	int BeatIndex = RelativePointInTime / SmallestIntervalBetweenBeats;
+	OutputDebugString(BeatIndex.ToString()->Data());
+	OutputDebugString(L"\n");
+
+	return std::find(list.begin(), list.end(), BeatIndex) != list.end();
+}
 
 
 LONG64 Sequencer::GetNanoSec()

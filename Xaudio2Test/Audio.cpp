@@ -4,10 +4,11 @@
 using Platform::COMException;
 using namespace Xaudio2Test;
 
-Audio::Audio(IXAudio2* pXAudio2, bool Continuous)
+Audio::Audio(IXAudio2* pXAudio2, bool Continuous, Sequencer ^Seq)
 {
 	
     // Create a source voice
+	Sequencerobject = Seq;
     WAVEFORMATEX waveFormat;
     waveFormat.wFormatTag = WAVE_FORMAT_PCM;
     waveFormat.nChannels = 1;
@@ -54,6 +55,10 @@ void Audio::SetAmplitude(float amp)
 
 void _stdcall Audio::OnVoiceProcessingPassStart(UINT32 bytesRequired)
 {
+	if (Sequencerobject->IsTime()){
+		OutputDebugString(L"ITs TIme!!\n");
+	}
+	
     if (bytesRequired == 0 || !ContinuousPlay)
         return;
 
