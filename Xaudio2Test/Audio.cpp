@@ -55,9 +55,6 @@ void Audio::SetAmplitude(float amp)
 
 void _stdcall Audio::OnVoiceProcessingPassStart(UINT32 bytesRequired)
 {
-	if (Sequencerobject->IsTime()){
-		OutputDebugString(L"ITs TIme!!\n");
-	}
 	
     if (bytesRequired == 0 || !ContinuousPlay)
         return;

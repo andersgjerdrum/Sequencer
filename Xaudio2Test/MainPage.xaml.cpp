@@ -29,13 +29,7 @@ MainPage::MainPage()
 	InitializeComponent();
 	/// Create an IXAudio2 object
     HRESULT hr = XAudio2Create(&pXAudio2);
-	sequencer = ref new Sequencer(2,4, 0.25f,ref new SequencerExecuteDelegate([this](int sequenceId)
-	{
-			Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([this,sequenceId](){
-				Xaudio2Test::MainPage::Dummy(sequenceId);
-			}));
-	
-	}));
+	sequencer = ref new Sequencer(2,4, 0.25f);
 	
 
 	
@@ -54,11 +48,6 @@ MainPage::MainPage()
 
 }
 
-void Xaudio2Test::MainPage::DispatcherTimer_Tick(Platform::Object^ sender, Platform::Object^ e)
-{
-  	Oscillator1->StartFillSubmitStop();
-	Oscillator2->StartFillSubmitStop();
-}
 /// <summary>
 /// Invoked when this page is about to be displayed in a Frame.
 /// </summary>
@@ -68,42 +57,11 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 {
 	(void) e;	// Unused parameter
 }
-/*Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, ref new Windows::UI::Core::DispatchedHandler([this](){
-		
-	}));*/
-void Xaudio2Test::MainPage::Dummy(int sequenceId)
-{
-
-		int pre = Stopwatch;
-		SYSTEMTIME st;
-		GetLocalTime(&st);
-		
-		Stopwatch = st.wMilliseconds + (st.wSecond * 1000);
-		int diff = Stopwatch - pre;
-		errorText->Text = diff.ToString();
-
-		BeatPoint bp = sequenceOfBeats.Find(sequenceId);
-		if(Oscillator1 != nullptr && Oscillator2 != nullptr)
-		{
-			int noteNum = 50;
-			double freq = GetTone(bp.Xaxis,110,440,RectCanvas->RenderSize.Width) *pow(2,(noteNum - 69) /12);
-			Oscillator1->SetFrequency((float)freq);
-			double freq2 = GetTone(bp.Yaxis,110,440,RectCanvas->RenderSize.Height) *pow(2,(noteNum - 69) /12);
-			Oscillator2->SetFrequency((float)freq);
-			//errorText->Text = "Pos:(" + bp.Xaxis.ToString() + "," + bp.Yaxis.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
-			Oscillator1->StartFillSubmitStop();
-			Oscillator2->StartFillSubmitStop();
-		}
-
-}
-
 
 void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
 	int dataPoint = sequencer->AddBeat();
-	if(dataPoint == -1){
-		return;
-	}
+
 	PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
 	int x = p->RawPosition.X;
 	int y = p->RawPosition.Y;
@@ -117,13 +75,19 @@ void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Wi
 		Oscillator1->SetFrequency((float)freq);
 		double freq2 = GetTone(y,110,440,RectCanvas->RenderSize.Height) *pow(2,(noteNum - 69) /12);
 		Oscillator2->SetFrequency((float)freq);
-		errorText->Text = "Pos:(" + x.ToString() + "," + y.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
+		errorText->Text = "";
+		for each (int var in sequencer->list)
+		{
+			errorText->Text = errorText->Text + var.ToString() + ",";
+		}
+
 		Oscillator1->StartFillSubmitStop();
 		Oscillator2->StartFillSubmitStop();
 
 	}
 
 }
+
 
 void Xaudio2Test::MainPage::Canvas_PointerMoved_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {

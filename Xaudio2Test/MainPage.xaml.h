@@ -19,7 +19,6 @@ namespace Xaudio2Test
 	{
 
 	 private:
-		DispatcherTimer^ SequenceTimer;
 		Sequencer^ sequencer;
 		Audio* Oscillator1;
 		Audio* Oscillator2;
