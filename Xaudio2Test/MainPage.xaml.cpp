@@ -28,23 +28,18 @@ MainPage::MainPage()
 {
 	InitializeComponent();
 	/// Create an IXAudio2 object
-    HRESULT hr = XAudio2Create(&pXAudio2);
-	sequencer = ref new Sequencer(2,4, 0.25f);
-	
+	HRESULT hr = XAudio2Create(&pXAudio2);
 
-	
+	if (FAILED(hr))
+		ref new COMException(hr, "XAudio2Create failure");
 
-    if (FAILED(hr))
-        ref new COMException(hr, "XAudio2Create failure");
+	// Create a mastering voice
+	hr = pXAudio2->CreateMasteringVoice(&pMasteringVoice);
 
-    // Create a mastering voice
-    hr = pXAudio2->CreateMasteringVoice(&pMasteringVoice);
+	if (FAILED(hr))
+		ref new COMException(hr, "CreateMasteringVoice failure");
 
-    if (FAILED(hr))
-        ref new COMException(hr, "CreateMasteringVoice failure");
-
-	Oscillator1 = new Audio(pXAudio2.Get(),false,sequencer);
-	Oscillator2 = new Audio(pXAudio2.Get(),false,sequencer);
+	Oscillator1 = new Audio(pXAudio2.Get(), 2, 1, 4, true);
 
 }
 
@@ -55,34 +50,33 @@ MainPage::MainPage()
 /// property is typically used to configure the page.</param>
 void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 {
-	(void) e;	// Unused parameter
+	(void)e;	// Unused parameter
 }
 
 void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	int dataPoint = sequencer->AddBeat();
+	int dataPoint = Oscillator1->AddBeat();
 
 	PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
 	int x = p->RawPosition.X;
 	int y = p->RawPosition.Y;
-	BeatPoint bp = BeatPoint(x,y,dataPoint);
+	BeatPoint bp = BeatPoint(x, y, dataPoint);
 	sequenceOfBeats.AddPoint(bp);
 
-	if(Oscillator1 != nullptr && Oscillator2 != nullptr)
+	if (Oscillator1 != nullptr)
 	{
 		int noteNum = 50;
-		double freq = GetTone(x,110,440,RectCanvas->RenderSize.Width) *pow(2,(noteNum - 69) /12);
+		double freq = GetTone(x, 110, 440, RectCanvas->RenderSize.Width) *pow(2, (noteNum - 69) / 12);
 		Oscillator1->SetFrequency((float)freq);
-		double freq2 = GetTone(y,110,440,RectCanvas->RenderSize.Height) *pow(2,(noteNum - 69) /12);
-		Oscillator2->SetFrequency((float)freq);
+		
 		errorText->Text = "";
-		for each (int var in sequencer->list)
+		for each (int var in Oscillator1->list)
 		{
 			errorText->Text = errorText->Text + var.ToString() + ",";
 		}
 
-		Oscillator1->StartFillSubmitStop();
-		Oscillator2->StartFillSubmitStop();
+		//Oscillator1->StartFillSubmitStop();
+		//Oscillator2->StartFillSubmitStop();
 
 	}
 
@@ -108,5 +102,5 @@ void Xaudio2Test::MainPage::Canvas_PointerMoved_1(Platform::Object^ sender, Wind
 
 int Xaudio2Test::MainPage::GetTone(double pointer, double min, double max, double maxPointer)
 {
-	return (int)(min + ((max - min)*(pointer/maxPointer)));
+	return (int)(min + ((max - min)*(pointer / maxPointer)));
 }

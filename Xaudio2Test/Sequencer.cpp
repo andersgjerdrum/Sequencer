@@ -12,15 +12,15 @@ using namespace Windows::Foundation;
 using namespace Windows::UI::Xaml;
 
 
-Sequencer::Sequencer(int RecurrenceInterval, int ResolutionOverInterval, float InaccuracyCoefficient)
+Sequencer::Sequencer(int RecurrenceInterval, int ResolutionPerSecond, float InaccuracyCoefficient)
 {
 
 	_RecurenceInterval = RecurrenceInterval;
-	Leniancy_In_BeatStrokes = (int)(InaccuracyCoefficient / ResolutionOverInterval);
+	Leniancy_In_BeatStrokes = (int)(InaccuracyCoefficient / ResolutionPerSecond);
 
 	lock = CreateMutexEx(nullptr,nullptr,0,SYNCHRONIZE);
 	//nano second resolution
-	_ResolutionOverInterval = ResolutionOverInterval;
+	_ResolutionPerSecond = ResolutionPerSecond;
 }
 
 LONG64 Sequencer::GetNanoSec()
@@ -33,14 +33,14 @@ int Sequencer::GetIndexFromTime(LONG64 time){
 
 	LONG64 IntervalLengthInNano = _RecurenceInterval * ONESECONDIN100NANO * 100;
 	LONG64 RelativePointInTime = time % (IntervalLengthInNano);
-	LONG64 SmallestIntervalBetweenBeats = IntervalLengthInNano / (_RecurenceInterval * _ResolutionOverInterval);
+	LONG64 SmallestIntervalBetweenBeats = IntervalLengthInNano / (_RecurenceInterval * _ResolutionPerSecond);
 	return RelativePointInTime / SmallestIntervalBetweenBeats;
 }
 int Sequencer::AddBeat()
 {
 	//
 	//do we need duplication
-	if (list.size() >= _RecurenceInterval * _ResolutionOverInterval){
+	if (list.size() >= _RecurenceInterval * _ResolutionPerSecond){
 		return -1;
 	}
 	int BeatIndex = GetIndexFromTime(GetNanoSec());
@@ -50,13 +50,13 @@ int Sequencer::AddBeat()
 	{
 		Pushable = -1;
 		for(int i = 1; i <= Leniancy_In_BeatStrokes; i++){
-			if (list.end() == std::find(list.begin(), list.end(), (BeatIndex + i) % (_RecurenceInterval * _ResolutionOverInterval)))
+			if (list.end() == std::find(list.begin(), list.end(), (BeatIndex + i) % (_RecurenceInterval * _ResolutionPerSecond)))
 			{
-				Pushable = (BeatIndex + i) % (_RecurenceInterval * _ResolutionOverInterval);
+				Pushable = (BeatIndex + i) % (_RecurenceInterval * _ResolutionPerSecond);
 			}
-			else if (list.end() == std::find(list.begin(), list.end(), (BeatIndex - i) % (_RecurenceInterval * _ResolutionOverInterval)))
+			else if (list.end() == std::find(list.begin(), list.end(), (BeatIndex - i) % (_RecurenceInterval * _ResolutionPerSecond)))
 			{
-				Pushable = (BeatIndex - i) % (_RecurenceInterval * _ResolutionOverInterval);
+				Pushable = (BeatIndex - i) % (_RecurenceInterval * _ResolutionPerSecond);
 			}
 		}
 	}

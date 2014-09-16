@@ -19,9 +19,8 @@ namespace Xaudio2Test
 	{
 
 	 private:
-		Sequencer^ sequencer;
+
 		Audio* Oscillator1;
-		Audio* Oscillator2;
 		int Stopwatch;
 
 		BeatPoints sequenceOfBeats;
