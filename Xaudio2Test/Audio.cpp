@@ -72,6 +72,9 @@ void _stdcall Audio::OnVoiceProcessingPassStart(UINT32 bytesRequired)
 	if (bytesRequired == 0 || !ContinuousPlay)
 		return;
 
+	//handle offsett start
+	//if start is without beat or if start is within beat
+
 	int startIndex = index;
 	int endIndex = startIndex + bytesRequired / 2;
 
@@ -86,7 +89,7 @@ void _stdcall Audio::OnVoiceProcessingPassStart(UINT32 bytesRequired)
 	{
 		for (int i = startIndex; i < BUFFER_LENGTH - startIndex; i += BeatLenghtInBytes)
 		{
-			FillAndSubmit(i, BeatLenghtInBytes);
+			FillAndSubmit(i, BeatLenghtInBytes / DUALBAND);
 		}
 		for (int i = 0; i < endIndex % BUFFER_LENGTH; i += BeatLenghtInBytes)
 			FillAndSubmit(0, endIndex % BUFFER_LENGTH);
@@ -131,7 +134,7 @@ void Audio::FillAndSubmit(int startIndex, int count)
 	{
 		CreateBlank(startIndex, count);
 	}
-	index = +count * DUALBAND;
+	index += count * DUALBAND;
 }
 
 void Audio::CreateBeat(int startIndex, int count)

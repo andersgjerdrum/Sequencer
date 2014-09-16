@@ -7,7 +7,6 @@
 #include "MainPage.xaml.h"
 #include "Audio.h"
 #include "BeatPoint.h"
-#include "Sequencer.h"
 using namespace Xaudio2Test;
 
 using namespace Platform;

@@ -7,7 +7,6 @@
 #include "BeatPoint.h"
 #include "MainPage.g.h"
 #include "Audio.h"
-#include "Sequencer.h"
 using namespace Windows::UI::Xaml;
 
 namespace Xaudio2Test
