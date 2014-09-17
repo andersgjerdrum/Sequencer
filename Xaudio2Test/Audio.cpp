@@ -8,10 +8,10 @@ Audio::Audio(IXAudio2* pXAudio2, int RecurrenceInterval, int InaccuracyCoefficie
 {
 	//Sequencer
 	_RecurenceInterval = RecurrenceInterval;
-	Leniancy_In_BeatStrokes = InaccuracyCoefficient;
-	_SmallestPointBetweenBeats = BUFFER_LENGTH / (_RecurenceInterval * ResolutionPerSecond);
+	_Leniancy_In_BeatStrokes = InaccuracyCoefficient;
+	_SmallestPointBetweenBeats = (BUFFER_LENGTH / DUALBAND) / (_RecurenceInterval * ResolutionPerSecond);
 
-	lock = CreateMutexEx(nullptr, nullptr, 0, SYNCHRONIZE);
+	_lock = CreateMutexEx(nullptr, nullptr, 0, SYNCHRONIZE);
 	//nano second resolution
 	_ResolutionPerSecond = ResolutionPerSecond;
 
@@ -34,10 +34,10 @@ Audio::Audio(IXAudio2* pXAudio2, int RecurrenceInterval, int InaccuracyCoefficie
 
 	// Allocate buffer for submitting waveform data
 	pWaveformBuffer = new short[BUFFER_LENGTH];
-	index = 0;
-	angle = 0;
-	angleIncrement = 0;
-	ContinuousPlay = Continuous;
+	_index = 0;
+	_angle = 0;
+	_angleIncrement = 0;
+	_ContinuousPlay = Continuous;
 	// Start the voice playing
 	if (Continuous)
 	{
@@ -53,7 +53,7 @@ Audio::~Audio()
 
 void Audio::SetFrequency(float freq)
 {
-	angleIncrement = (int)(65536.0 * WAVEFORM_LENGTH * freq / 44100.0);
+	_angleIncrement = (int)(65536.0 * WAVEFORM_LENGTH * freq / 44100.0);
 }
 
 void Audio::SetAmplitude(float amp)
@@ -63,37 +63,56 @@ void Audio::SetAmplitude(float amp)
 
 bool Audio::NextBeat(UINT64 bufferplace)
 {
-	return bufferplace % _SmallestPointBetweenBeats == 0;
+	//TODO: itsafuckingconstantinthemiddleofnowhere!!
+	return bufferplace % _SmallestPointBetweenBeats < 200;
 }
 
 void _stdcall Audio::OnVoiceProcessingPassStart(UINT32 bytesRequired)
 {
-	UINT64 BeatLenghtInBytes = 200;
-	if (bytesRequired == 0 || !ContinuousPlay)
+	if (bytesRequired == 0)
 		return;
 
-	//handle offsett start
-	//if start is without beat or if start is within beat
-
-	int startIndex = index;
+	int startIndex = _index;
 	int endIndex = startIndex + bytesRequired / 2;
 
 	if (endIndex <= BUFFER_LENGTH)
 	{
-		for (int i = startIndex; i < endIndex - startIndex; i += BeatLenghtInBytes)
-		{
-			FillAndSubmit(i, BeatLenghtInBytes / DUALBAND);
-		}
+		FillAndSubmit(startIndex, endIndex - startIndex);
 	}
 	else
 	{
-		for (int i = startIndex; i < BUFFER_LENGTH - startIndex; i += BeatLenghtInBytes)
-		{
-			FillAndSubmit(i, BeatLenghtInBytes / DUALBAND);
-		}
-		for (int i = 0; i < endIndex % BUFFER_LENGTH; i += BeatLenghtInBytes)
-			FillAndSubmit(0, endIndex % BUFFER_LENGTH);
+		FillAndSubmit(startIndex, BUFFER_LENGTH - startIndex);
+		FillAndSubmit(0, endIndex % BUFFER_LENGTH);
 	}
+	_index = (_index + bytesRequired / 2) % BUFFER_LENGTH;
+}
+
+void Audio::FillAndSubmit(int startIndex, int count)
+{
+	for (int i = startIndex; i < startIndex + count; i++)
+	{
+		if (IsValidBeatPoint(i))
+		{
+			pWaveformBuffer[i] = (short)(_angle / WAVEFORM_LENGTH - 32768);
+			_angle = (_angle + _angleIncrement) % (WAVEFORM_LENGTH * 65536);
+		}
+		else
+		{
+			pWaveformBuffer[i] = 0;
+		}
+	}
+
+	XAUDIO2_BUFFER buffer = { 0 };
+	buffer.AudioBytes = 2 * BUFFER_LENGTH;
+	buffer.pAudioData = (byte *)pWaveformBuffer;
+	buffer.Flags = 0;
+	buffer.PlayBegin = startIndex;
+	buffer.PlayLength = count;
+
+	HRESULT hr = pSourceVoice->SubmitSourceBuffer(&buffer);
+
+	if (FAILED(hr))
+		throw ref new COMException(hr, "SubmitSourceBuffer");
 }
 
 
@@ -101,79 +120,25 @@ UINT64 Audio::GetBufferReadFromSourceVoice(void)
 {
 	XAUDIO2_VOICE_STATE state;
 	pSourceVoice->GetState(&state, 0);
-	return state.SamplesPlayed * DUALBAND;
-}
-
-void Audio::CreateBlank(int startIndex, int count)
-{
-	for (int i = startIndex; i < startIndex + count; i++)
-	{
-		pWaveformBuffer[i] = 0;
-	}
-	XAUDIO2_BUFFER buffer = { 0 };
-	buffer.AudioBytes = 2 * BUFFER_LENGTH;
-	buffer.pAudioData = (byte *)pWaveformBuffer;
-	buffer.Flags = 0;
-	buffer.PlayBegin = startIndex;
-	buffer.PlayLength = count;
-
-	HRESULT hr = pSourceVoice->SubmitSourceBuffer(&buffer);
-
-	if (FAILED(hr))
-		throw ref new COMException(hr, "SubmitSourceBuffer");
-}
-
-
-void Audio::FillAndSubmit(int startIndex, int count)
-{
-	if (IsValidBeatPoint(index))
-	{
-		CreateBeat(startIndex, count);
-	}
-	else
-	{
-		CreateBlank(startIndex, count);
-	}
-	index += count * DUALBAND;
-}
-
-void Audio::CreateBeat(int startIndex, int count)
-{
-	for (int i = startIndex; i < startIndex + count; i++)
-	{
-		pWaveformBuffer[i] = (short)(angle / WAVEFORM_LENGTH - 32768);
-		angle = (angle + angleIncrement) % (WAVEFORM_LENGTH * 65536);
-	}
-
-	XAUDIO2_BUFFER buffer = { 0 };
-	buffer.AudioBytes = 2 * BUFFER_LENGTH;
-	buffer.pAudioData = (byte *)pWaveformBuffer;
-	buffer.Flags = 0;
-	buffer.PlayBegin = startIndex;
-	buffer.PlayLength = count;
-
-	HRESULT hr = pSourceVoice->SubmitSourceBuffer(&buffer);
-
-	if (FAILED(hr))
-		throw ref new COMException(hr, "SubmitSourceBuffer");
+	return state.SamplesPlayed;
 }
 
 bool Audio::IsValidBeatPoint(UINT64 index)
 {
-	WaitForSingleObjectEx(lock, INFINITE, false);
-	bool IsValid = NextBeat(index) && (list.end() != std::find(list.begin(), list.end(), GetIndexFromBufferSample(index)));
-	ReleaseMutex(lock);
+	//WaitForSingleObjectEx(_lock, INFINITE, false);
+	bool IsValid = NextBeat(index) && list.end() != std::find(list.begin(), list.end(), GetIndexFromBufferSample(index));
+	//ReleaseMutex(_lock);
 	return IsValid;
 }
 
 int Audio::GetIndexFromBufferSample(UINT64 BufferPoint)
 {
-	UINT64 CyclePoint = BufferPoint % BUFFER_LENGTH;
+	UINT64 CyclePoint = BufferPoint % (BUFFER_LENGTH / 2);
 	return CyclePoint / _SmallestPointBetweenBeats;
 }
 int Audio::AddBeat()
 {
-	WaitForSingleObjectEx(lock, INFINITE, false);
+	WaitForSingleObjectEx(_lock, INFINITE, false);
 
 	if (list.size() >= _RecurenceInterval * _ResolutionPerSecond){
 		return -1;
@@ -184,7 +149,7 @@ int Audio::AddBeat()
 	if (list.end() != std::find(list.begin(), list.end(), BeatIndex))
 	{
 		Pushable = -1;
-		for (int i = 1; i <= Leniancy_In_BeatStrokes; i++){
+		for (int i = 1; i <= _Leniancy_In_BeatStrokes; i++){
 			if (list.end() == std::find(list.begin(), list.end(), (BeatIndex + i) % (_RecurenceInterval * _ResolutionPerSecond)))
 			{
 				Pushable = (BeatIndex + i) % (_RecurenceInterval * _ResolutionPerSecond);
@@ -201,15 +166,15 @@ int Audio::AddBeat()
 	}
 
 	list.push_front(Pushable);
-	ReleaseMutex(lock);
+	ReleaseMutex(_lock);
 	return Pushable;
 }
 
 void Audio::Reset()
 {
-	WaitForSingleObjectEx(lock, INFINITE, false);
+	WaitForSingleObjectEx(_lock, INFINITE, false);
 	list.clear();
-	ReleaseMutex(lock);
+	ReleaseMutex(_lock);
 
 }
 

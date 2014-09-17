@@ -21,21 +21,21 @@ namespace Xaudio2Test
 	{
 	private:
 		int _RecurenceInterval;
-		int Leniancy_In_BeatStrokes;
+		int _Leniancy_In_BeatStrokes;
 		int _ResolutionPerSecond;
-		HANDLE lock;
+		HANDLE _lock;
 		LONG64 GetNanoSec();
 		UINT64 _SmallestPointBetweenBeats;
-		UINT64 index;
-        int angle;
-        int angleIncrement;
-		static const int BUFFER_LENGTH = BYTESPERSECOND;
+		UINT64 _index;
+        int _angle;
+        int _angleIncrement;
+		static const int BUFFER_LENGTH = BYTESPERSECOND * 2;
 		static const int WAVEFORM_LENGTH = 8192;
 		short * pWaveformBuffer;
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;
 		IXAudio2SourceVoice * pSourceVoice;
-		bool ContinuousPlay;
+		bool _ContinuousPlay;
 	public:
 		void SetFrequency(float freq);
         void SetAmplitude(float amp);
