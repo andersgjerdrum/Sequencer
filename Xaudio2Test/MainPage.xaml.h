@@ -8,7 +8,7 @@
 #include "MainPage.g.h"
 #include "Audio.h"
 using namespace Windows::UI::Xaml;
-
+using namespace SequencerLib;
 namespace Xaudio2Test
 {
 	/// <summary>
@@ -18,10 +18,10 @@ namespace Xaudio2Test
 	{
 
 	 private:
-
+		 //Do shared pointer
 		Audio* Oscillator1;
 		int Stopwatch;
-
+		ISequencer * SequencerObject;
 		BeatPoints sequenceOfBeats;
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;

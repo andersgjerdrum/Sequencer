@@ -30,17 +30,11 @@
     <ClCompile Include="App.xaml.cpp" />
     <ClCompile Include="MainPage.xaml.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Utility.cpp" />
-    <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="BeatPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
     <ClInclude Include="MainPage.xaml.h" />
-    <ClInclude Include="Utility.h" />
-    <ClInclude Include="Audio.h" />
-    <ClInclude Include="BeatPoint.h" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />

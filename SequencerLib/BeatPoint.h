@@ -6,7 +6,7 @@ using namespace Windows::Foundation;
 using namespace Platform;
 using namespace Windows::UI::Xaml;
 using namespace std;
-namespace Xaudio2Test 
+namespace SequencerLib
 {
 	class BeatPoint{
 	public:

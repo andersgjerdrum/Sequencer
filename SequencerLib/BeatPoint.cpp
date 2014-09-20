@@ -2,7 +2,7 @@
 #include "BeatPoint.h"
 #include <map>
 
-using namespace Xaudio2Test;
+using namespace SequencerLib;
 
 BeatPoint::BeatPoint(int x, int y, int sequenceId)
 {

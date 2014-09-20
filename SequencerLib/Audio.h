@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "ISequencer.h"
 
 #define SECONDS 5
 #define SAMPLERATE 44100
@@ -15,17 +16,12 @@
 #define ONESECONDIN100NANO 10000000L
 #define ADJUST 25
 
-namespace Xaudio2Test 
+namespace SequencerLib
 {
 	class Audio : public IXAudio2VoiceCallback 
 	{
 	private:
-		int _RecurenceInterval;
-		int _Leniancy_In_BeatStrokes;
-		int _ResolutionPerSecond;
-		HANDLE _lock;
-		LONG64 GetNanoSec();
-		UINT64 _SmallestPointBetweenBeats;
+		ISequencer * SequencerObject;
 		UINT64 _index;
         int _angle;
         int _angleIncrement;
@@ -35,15 +31,12 @@ namespace Xaudio2Test
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;
 		IXAudio2SourceVoice * pSourceVoice;
-		bool _ContinuousPlay;
 	public:
 		void SetFrequency(float freq);
         void SetAmplitude(float amp);
-		Audio(IXAudio2* pXAudio2, int RecurrenceInterval, int InaccuracyCoefficient, int ResolutionPerSecond, bool Continuous);
+		UINT64 GetBufferReadFromSourceVoice(void);
+		Audio(IXAudio2* pXAudio2, ISequencer * Sequencer);
 		~Audio();
-		void Reset();
-		std::list<int> list;
-		int AddBeat();
 		//Callbacks requred for IXAudio2VoiceCallback
 		void _stdcall OnVoiceProcessingPassStart(UINT32 bytesRequired);
         void _stdcall OnVoiceProcessingPassEnd(){}
@@ -54,13 +47,6 @@ namespace Xaudio2Test
         void _stdcall OnVoiceError(void*, HRESULT){}
 	private:
 		void FillAndSubmit(int startIndex, int count);
-		void CreateBlank(int startIndex, int count);
-		int GetIndexFromTime(LONG64 time);
-		UINT64 GetBufferReadFromSourceVoice(void);
-		int GetIndexFromBufferSample(UINT64 BufferPoint);
-		bool NextBeat(UINT64 bufferplace);
-		bool IsValidBeatPoint(UINT64 index);
-		void CreateBeat(int startIndex, int count);
 	};
 
 }

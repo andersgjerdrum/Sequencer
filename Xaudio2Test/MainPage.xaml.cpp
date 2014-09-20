@@ -7,6 +7,8 @@
 #include "MainPage.xaml.h"
 #include "Audio.h"
 #include "BeatPoint.h"
+#include "SequencerConfiguration.h"
+#include "Sequencer.h"
 using namespace Xaudio2Test;
 
 using namespace Platform;
@@ -21,6 +23,7 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace Windows::UI::Input;
+using namespace SequencerLib;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 MainPage::MainPage()
@@ -37,8 +40,9 @@ MainPage::MainPage()
 
 	if (FAILED(hr))
 		ref new COMException(hr, "CreateMasteringVoice failure");
+	SequencerObject = new Sequencer(new SequencerConfiguration(2, 4, 1, 200));
 
-	Oscillator1 = new Audio(pXAudio2.Get(), 2, 1, 4, true);
+	Oscillator1 = new Audio(pXAudio2.Get(), SequencerObject);
 
 }
 
@@ -54,7 +58,7 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 
 void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	int dataPoint = Oscillator1->AddBeat();
+	int dataPoint = SequencerObject->AddBeat(Oscillator1->GetBufferReadFromSourceVoice());
 
 	PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
 	int x = p->RawPosition.X;
@@ -67,16 +71,9 @@ void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Wi
 		int noteNum = 50;
 		double freq = GetTone(x, 110, 440, RectCanvas->RenderSize.Width) *pow(2, (noteNum - 69) / 12);
 		Oscillator1->SetFrequency((float)freq);
-		
+
 		errorText->Text = "";
-		for each (int var in Oscillator1->list)
-		{
-			errorText->Text = errorText->Text + var.ToString() + ",";
-		}
-
-		//Oscillator1->StartFillSubmitStop();
-		//Oscillator2->StartFillSubmitStop();
-
+		
 	}
 
 }
@@ -84,19 +81,7 @@ void Xaudio2Test::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Wi
 
 void Xaudio2Test::MainPage::Canvas_PointerMoved_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	//PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
-	//int x = p->RawPosition.X;
-	//int y = p->RawPosition.Y;
-	//if(Oscillator1 != nullptr && Oscillator2 != nullptr)
-	//{
-	//	int noteNumX = 50;
-	//	int noteNumY = 50;
-	//	double freq = GetTone(x,110,880,RectCanvas->RenderSize.Width) *pow(2,(noteNumX - 69) /12);
-	//	Oscillator1->SetFrequency((float)freq);
-	//	double freq2 = GetTone(y,110,880,RectCanvas->RenderSize.Height) *pow(2,(noteNumY - 69) /12);
-	//	Oscillator2->SetFrequency((float)freq2);
-	//	errorText->Text = "Pos:(" + x.ToString() + "," + y.ToString() + ")" + "Freq:(" + freq.ToString() + "," + freq2.ToString() + ")";
-	//}
+	
 }
 
 int Xaudio2Test::MainPage::GetTone(double pointer, double min, double max, double maxPointer)
