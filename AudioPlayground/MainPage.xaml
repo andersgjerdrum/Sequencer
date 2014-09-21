@@ -8,6 +8,11 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <Rectangle Name="RectCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PointerPressed="Canvas_PointerPressed_1" PointerMoved="Canvas_PointerMoved_1" Fill="Black"/>
+        <TextBlock Name="errorText"
+               FontSize="24"
+               TextWrapping="Wrap"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top" Width="1346" Canvas.Left="10" Height="77" Canvas.Top="10"/>
     </Grid>
 </Page>
