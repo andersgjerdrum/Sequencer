@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SequencerTests", "Sequencer
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SequencerLib", "SequencerLib\SequencerLib.vcxproj", "{9B423614-CCD6-4D3C-AA0E-96F4BC98A895}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioPlayground", "AudioPlayground\AudioPlayground.vcxproj", "{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -87,6 +89,24 @@ Global
 		{9B423614-CCD6-4D3C-AA0E-96F4BC98A895}.Release|Win32.Build.0 = Release|Win32
 		{9B423614-CCD6-4D3C-AA0E-96F4BC98A895}.Release|x64.ActiveCfg = Release|x64
 		{9B423614-CCD6-4D3C-AA0E-96F4BC98A895}.Release|x64.Build.0 = Release|x64
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Debug|ARM.Build.0 = Debug|ARM
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Debug|ARM.Deploy.0 = Debug|ARM
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Debug|Win32.Build.0 = Debug|Win32
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Debug|Win32.Deploy.0 = Debug|Win32
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Debug|x64.ActiveCfg = Debug|x64
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Debug|x64.Build.0 = Debug|x64
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Debug|x64.Deploy.0 = Debug|x64
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Release|ARM.ActiveCfg = Release|ARM
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Release|ARM.Build.0 = Release|ARM
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Release|ARM.Deploy.0 = Release|ARM
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Release|Win32.ActiveCfg = Release|Win32
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Release|Win32.Build.0 = Release|Win32
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Release|Win32.Deploy.0 = Release|Win32
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Release|x64.ActiveCfg = Release|x64
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Release|x64.Build.0 = Release|x64
+		{B3225DC6-78CD-4FAC-8A56-A0B5ADA01C7A}.Release|x64.Deploy.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
