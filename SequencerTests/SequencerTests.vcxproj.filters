@@ -30,7 +30,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="unittest1.cpp">
+    <ClCompile Include="SequencerTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
