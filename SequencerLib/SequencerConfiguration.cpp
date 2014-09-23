@@ -3,16 +3,25 @@
 #include "SequencerConfiguration.h"
 using namespace SequencerLib;
 
-#define SAMPLERATE 44100
-#define DUALBAND 2
-#define BYTESPERSECOND (SAMPLERATE * DUALBAND)
+
 SequencerConfiguration::SequencerConfiguration(int RecurrenceIntervalSeconds, int ResolutionPerSecond, int ErrorCorrectiveCoeffitient, UINT64 BeatLengthInBytes)
 {
 	_RecurrenceIntervalSeconds = RecurrenceIntervalSeconds;
 	_ResolutionPerSecond = ResolutionPerSecond;
 	_ErrorCorrectiveCoeffitient = ErrorCorrectiveCoeffitient;
 	_BeatLengthInBytes = BeatLengthInBytes;
+	if (!ValidateParameters())
+	{
+		throw std::invalid_argument("Invalid arguments input to SequencerConfiguration Ctor");
+	}
+}
 
+bool SequencerConfiguration::ValidateParameters(void)
+{
+	return _RecurrenceIntervalSeconds != 0 
+		&& _ResolutionPerSecond != 0 
+		&& _BeatLengthInBytes != 0
+		&& _BeatLengthInBytes <= GetSmallestPointBetweenBeats();
 }
 int SequencerConfiguration::GetRecurrenceIntervalPerSecond(void)
 {

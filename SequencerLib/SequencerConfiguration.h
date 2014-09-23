@@ -2,6 +2,10 @@
 #include "pch.h"
 #include "ISequencerConfiguration.h"
 
+#define SAMPLERATE 44100
+#define DUALBAND 2
+#define BYTESPERSECOND (SAMPLERATE * DUALBAND)
+
 namespace SequencerLib{
 
 	class SequencerConfiguration : public ISequencerConfiguration{
@@ -19,5 +23,6 @@ namespace SequencerLib{
 		int _ResolutionPerSecond;
 		int _ErrorCorrectiveCoeffitient;
 		UINT64 _BeatLengthInBytes;
+		bool ValidateParameters();
 	};
 }
