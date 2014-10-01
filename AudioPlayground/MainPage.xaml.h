@@ -10,7 +10,7 @@
 using namespace Windows::UI::Xaml;
 using namespace SequencerLib;
 #include "MainPage.g.h"
-
+#include "SequencerFactory.h"
 namespace AudioPlayground
 {
 	/// <summary>
@@ -21,9 +21,8 @@ namespace AudioPlayground
 
 	private:
 		//Do shared pointer
-		Audio* Oscillator1;
 		int Stopwatch;
-		ISequencer * SequencerObject;
+		SequencerInstance * SequencerObject;
 		BeatPoints sequenceOfBeats;
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;

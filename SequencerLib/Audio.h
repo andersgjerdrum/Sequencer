@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "ISequencer.h"
+#include "IAudioBuffer.h"
 
 #define SECONDS 5
 #define SAMPLERATE 44100
@@ -21,21 +21,15 @@ namespace SequencerLib
 	class Audio : public IXAudio2VoiceCallback 
 	{
 	private:
-		ISequencer * SequencerObject;
-		UINT64 _index;
-        int _angle;
-        int _angleIncrement;
-		static const int BUFFER_LENGTH = BYTESPERSECOND * 2;
-		static const int WAVEFORM_LENGTH = 8192;
-		short * pWaveformBuffer;
+		IAudioBuffer * BufferObject;
+		//static const int BUFFER_LENGTH = BYTESPERSECOND * 2;
 		Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;
 		IXAudio2SourceVoice * pSourceVoice;
 	public:
-		void SetFrequency(float freq);
         void SetAmplitude(float amp);
 		UINT64 GetBufferReadFromSourceVoice(void);
-		Audio(IXAudio2* pXAudio2, ISequencer * Sequencer);
+		Audio(IXAudio2* pXAudio2, IAudioBuffer* buffer);
 		~Audio();
 		//Callbacks requred for IXAudio2VoiceCallback
 		void _stdcall OnVoiceProcessingPassStart(UINT32 bytesRequired);
@@ -46,7 +40,7 @@ namespace SequencerLib
         void _stdcall OnLoopEnd(void*){}
         void _stdcall OnVoiceError(void*, HRESULT){}
 	private:
-		void FillAndSubmit(int startIndex, int count);
+		void FillAndSubmit(int startIndex, int count, int bytes, byte *bufferAddr);
 	};
 
 }

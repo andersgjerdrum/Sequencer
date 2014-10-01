@@ -184,20 +184,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="AudioBuffer.h" />
     <ClInclude Include="BeatPoint.h" />
+    <ClInclude Include="IAudioBuffer.h" />
     <ClInclude Include="ISequencer.h" />
     <ClInclude Include="ISequencerConfiguration.h" />
     <ClInclude Include="Sequencer.h" />
     <ClInclude Include="SequencerConfiguration.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SequencerFactory.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="AudioBuffer.cpp" />
     <ClCompile Include="BeatPoint.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Sequencer.cpp" />
     <ClCompile Include="SequencerConfiguration.cpp" />
+    <ClCompile Include="SequencerFactory.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

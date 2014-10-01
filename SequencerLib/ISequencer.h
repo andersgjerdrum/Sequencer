@@ -7,5 +7,6 @@ namespace SequencerLib
 	{
 		virtual int AddBeat(UINT64 SamplePoint) = 0;
 		virtual bool IsValidBeatPoint(UINT64 SamplePoint) = 0;
+
 	};
 }

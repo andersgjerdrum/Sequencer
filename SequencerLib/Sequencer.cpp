@@ -1,14 +1,12 @@
 #pragma once
 #include "pch.h"
 #include "Sequencer.h"
-#include "ISequencerConfiguration.h"
 using namespace SequencerLib;
 
 
-Sequencer::Sequencer(ISequencerConfiguration * config) 
+Sequencer::Sequencer(ISequencerConfiguration * config)
 {
 	SequencerConfiguration = config;
-
 }
 int Sequencer::AddBeat(UINT64 SamplePoint)
 {
@@ -51,7 +49,6 @@ bool Sequencer::IsValidBeatPoint(UINT64 index)
 }
 bool Sequencer::NextBeat(UINT64 bufferplace)
 {
-	//TODO: itsafuckingconstantinthemiddleofnowhere!!
 	return bufferplace % SequencerConfiguration->GetSmallestPointBetweenBeats() < SequencerConfiguration->GetBeatLength();
 }
 

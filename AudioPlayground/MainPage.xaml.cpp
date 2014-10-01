@@ -41,9 +41,10 @@ MainPage::MainPage()
 
 	if (FAILED(hr))
 		ref new COMException(hr, "CreateMasteringVoice failure");
-	SequencerObject = new Sequencer(new SequencerConfiguration(2, 4, 1, 200));
+	SequencerFactory factory;
+	SequencerObject = factory.Create(new SequencerConfiguration(2, 4, 1, 200), pXAudio2.Get());
 
-	Oscillator1 = new Audio(pXAudio2.Get(), SequencerObject);
+	
 
 
 }
@@ -59,24 +60,13 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 
 void AudioPlayground::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	int dataPoint = SequencerObject->AddBeat(Oscillator1->GetBufferReadFromSourceVoice());
+	int dataPoint = SequencerObject->Control->AddBeat(SequencerObject->Sound->GetBufferReadFromSourceVoice());
 
 	PointerPoint^ p = e->GetCurrentPoint(RectCanvas);
 	int x = p->RawPosition.X;
 	int y = p->RawPosition.Y;
 	BeatPoint bp = BeatPoint(x, y, dataPoint);
 	sequenceOfBeats.AddPoint(bp);
-
-	if (Oscillator1 != nullptr)
-	{
-		int noteNum = 50;
-		double freq = GetTone(x, 110, 440, RectCanvas->RenderSize.Width) *pow(2, (noteNum - 69) / 12);
-		Oscillator1->SetFrequency((float)freq);
-
-		errorText->Text = "";
-
-	}
-
 }
 
 
