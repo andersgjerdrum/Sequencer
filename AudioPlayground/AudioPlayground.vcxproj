@@ -95,7 +95,7 @@
     <PackageCertificateKeyFile>AudioPlayground_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\angjerd\synthapp\synth-app\SequencerLib;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\angjerd\sequencer\Sequencer\SequencerLib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
