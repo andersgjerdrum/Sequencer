@@ -11,7 +11,7 @@ namespace SequencerLib
 	{
 	private:
 		short * pWaveformBuffer;
-		UINT64 BufferSize;
+		UINT64 SampleSize;
 		ISequencer * SequencerObject;
 		UINT64 _index;
 		int _angle;

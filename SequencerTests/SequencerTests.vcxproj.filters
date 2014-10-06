@@ -33,7 +33,10 @@
     <ClCompile Include="SequencerConfigurationTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SequencerTest.cpp">
+    <ClCompile Include="SequencerTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioBufferTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
