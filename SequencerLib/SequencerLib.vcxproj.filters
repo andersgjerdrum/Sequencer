@@ -14,6 +14,7 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="AudioBuffer.cpp" />
     <ClCompile Include="SequencerFactory.cpp" />
+    <ClCompile Include="AudioStream.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -27,5 +28,6 @@
     <ClInclude Include="AudioBuffer.h" />
     <ClInclude Include="IAudioBuffer.h" />
     <ClInclude Include="SequencerFactory.h" />
+    <ClInclude Include="AudioStream.h" />
   </ItemGroup>
 </Project>

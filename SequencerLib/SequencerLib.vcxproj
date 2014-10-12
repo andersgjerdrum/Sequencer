@@ -185,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioBuffer.h" />
+    <ClInclude Include="AudioStream.h" />
     <ClInclude Include="BeatPoint.h" />
     <ClInclude Include="IAudioBuffer.h" />
     <ClInclude Include="ISequencer.h" />
@@ -198,6 +199,7 @@
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioBuffer.cpp" />
+    <ClCompile Include="AudioStream.cpp" />
     <ClCompile Include="BeatPoint.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Sequencer.cpp" />
