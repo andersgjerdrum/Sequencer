@@ -3,6 +3,7 @@
 //// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 //// PARTICULAR PURPOSE.
 ////
+//// Source: https://code.msdn.microsoft.com/windowsapps/XAudio2-Stream-Effect-3f95c8f2/view/SourceCode
 //// Copyright (c) Microsoft Corporation. All rights reserved
 
 #pragma once
