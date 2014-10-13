@@ -12,6 +12,7 @@ namespace SequencerLib
 	private:
 		short * pWaveformBuffer;
 		UINT64 SampleSize;
+		std::vector<byte> SampleBufferObject;
 		ISequencer * SequencerObject;
 		UINT64 _index;
 		int _angle;
@@ -19,7 +20,7 @@ namespace SequencerLib
 		static const int WAVEFORM_LENGTH = 8192;
 		void FillBuffer(int startIndex, int count, std::function<void(int, int, int,byte*)> process);
 	public:
-		AudioBuffer(UINT64 buffsize, ISequencer * Sequencer);
+		AudioBuffer(UINT64 buffsize, ISequencer * Sequencer, std::vector<byte> sample);
 		void PrepareBuffer(UINT32 bytesRequired, std::function<void(int, int, int,byte*)> process);
 		void SetFrequency(float freq);
 		short * GetBufferAddress(void);

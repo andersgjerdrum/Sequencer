@@ -121,6 +121,9 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
+    <Lib>
+      <AdditionalDependencies>xaudio2.lib;windowscodecs.lib;mfcore.lib;dxva2.lib;evr.lib;mf.lib;mfplat.lib;mfplay.lib;mfreadwrite.lib;mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -190,6 +193,8 @@
     <ClInclude Include="IAudioBuffer.h" />
     <ClInclude Include="ISequencer.h" />
     <ClInclude Include="ISequencerConfiguration.h" />
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="resource2.h" />
     <ClInclude Include="Sequencer.h" />
     <ClInclude Include="SequencerConfiguration.h" />
     <ClInclude Include="pch.h" />
@@ -205,6 +210,9 @@
     <ClCompile Include="Sequencer.cpp" />
     <ClCompile Include="SequencerConfiguration.cpp" />
     <ClCompile Include="SequencerFactory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SequencerLib1.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

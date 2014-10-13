@@ -25,8 +25,8 @@ namespace SequencerTests
 			auto dummysequencer = new DummySequencer([](UINT64 a)->bool {
 				return false;
 			});
-
-			auto buffer = new AudioBuffer(100, dummysequencer);
+			std::vector<byte>  dummy;
+			auto buffer = new AudioBuffer(100, dummysequencer, dummy);
 			buffer->PrepareBuffer(100, [this](int startindex, int count, int sampleSize, byte* bufferpointer)->void
 			{
 				Assert::AreEqual(0, startindex, L"Starts at beginning of buffer");
@@ -39,8 +39,8 @@ namespace SequencerTests
 			auto dummysequencer = new DummySequencer([](UINT64 a)->bool {
 				return false;
 			});
-
-			auto buffer = new AudioBuffer(100, dummysequencer);
+			std::vector<byte>  dummy;
+			auto buffer = new AudioBuffer(100, dummysequencer, dummy);
 			buffer->PrepareBuffer(50, [this](int startindex, int count, int buffersize, byte* bufferpointer)->void
 			{
 				Assert::AreEqual(0, startindex, L"Starts at beginning of buffer");
@@ -65,8 +65,8 @@ namespace SequencerTests
 			auto dummysequencer = new DummySequencer([](UINT64 a)->bool {
 				return false;
 			});
-
-			auto buffer = new AudioBuffer(100, dummysequencer);
+			std::vector<byte>  dummy;
+			auto buffer = new AudioBuffer(100, dummysequencer, dummy);
 			buffer->PrepareBuffer(98, [this](int startindex, int count, int buffersize, byte* bufferpointer)->void
 			{
 				Assert::AreEqual(0, startindex, L"Starts at beginning of buffer");
@@ -74,7 +74,7 @@ namespace SequencerTests
 				Assert::AreEqual(50, buffersize, L"Samplesize is as expected");
 			});
 			int increment = 0;
-			buffer->PrepareBuffer(10, [this,&increment](int startindex, int count, int buffersize, byte* bufferpointer)->void
+			buffer->PrepareBuffer(10, [this, &increment](int startindex, int count, int buffersize, byte* bufferpointer)->void
 			{
 				if (increment == 0){
 					Assert::AreEqual(49, startindex, L"Starts at end of buffer minus 2");
@@ -88,10 +88,10 @@ namespace SequencerTests
 					Assert::AreEqual(50, buffersize, L"Samplesize is as expected");
 				}
 			});
-			
+
 		}
 		//Add  acctual data comparison when supporting sample audio
-		
+
 
 	};
 }

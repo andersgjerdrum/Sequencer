@@ -8,8 +8,8 @@
 
 #include "pch.h"
 
-#include <initguid.h>
 #include "AudioStream.h"
+#include <initguid.h>
 using namespace SequencerLib;
 
 AudioStream::AudioStream(_In_ Platform::String^ url)

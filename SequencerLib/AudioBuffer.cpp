@@ -4,7 +4,7 @@
 using namespace SequencerLib;
 
 
-AudioBuffer::AudioBuffer(UINT64 buffsize, ISequencer * Sequencer)
+AudioBuffer::AudioBuffer(UINT64 buffsize, ISequencer * Sequencer, std::vector<byte> sample)
 {
 	SequencerObject = Sequencer;
 	SampleSize = buffsize / 2;
@@ -12,6 +12,7 @@ AudioBuffer::AudioBuffer(UINT64 buffsize, ISequencer * Sequencer)
 	_angle = 0;
 	_angleIncrement = 0;
 	pWaveformBuffer = new short[buffsize];
+	SampleBufferObject = sample;
 }
 void AudioBuffer::SetFrequency(float freq)
 {

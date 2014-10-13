@@ -14,6 +14,6 @@ namespace SequencerLib
 
 	class SequencerFactory{
 	public:
-		SequencerInstance * Create(ISequencerConfiguration * config, IXAudio2 *pXAudio);
+		SequencerInstance * Create(ISequencerConfiguration * config, IXAudio2 *pXAudio, Platform::String^ url);
 	};
 }

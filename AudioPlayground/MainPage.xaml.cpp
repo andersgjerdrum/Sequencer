@@ -28,6 +28,8 @@ using namespace SequencerLib;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
+const char16 MUSIC_FILE[] = L"‪Media\\becky.wma";
+
 MainPage::MainPage()
 {
 	InitializeComponent();
@@ -42,9 +44,9 @@ MainPage::MainPage()
 	if (FAILED(hr))
 		ref new COMException(hr, "CreateMasteringVoice failure");
 	SequencerFactory factory;
-	SequencerObject = factory.Create(new SequencerConfiguration(2, 4, 1, 200), pXAudio2.Get());
+	SequencerObject = factory.Create(new SequencerConfiguration(2, 4, 1, 200), pXAudio2.Get(), ref new Platform::String(MUSIC_FILE));
 
-	
+
 
 
 }
