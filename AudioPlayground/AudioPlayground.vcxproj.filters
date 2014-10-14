@@ -39,12 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AudioPlayground_TemporaryKey.pfx" />
-    <None Include="Media\becky.wma" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainPage.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="Media\Snare-Drum-8.wav" />
   </ItemGroup>
 </Project>

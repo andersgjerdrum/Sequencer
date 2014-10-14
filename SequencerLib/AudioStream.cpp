@@ -9,10 +9,14 @@
 #include "pch.h"
 
 #include "AudioStream.h"
+
 #include <initguid.h>
 using namespace SequencerLib;
+using namespace Windows::Storage::Streams;
+using namespace Microsoft::WRL;
 
-AudioStream::AudioStream(_In_ Platform::String^ url)
+
+AudioStream::AudioStream(IRandomAccessStream^ streamHandle)
 {
 	Microsoft::WRL::ComPtr<IMFMediaType> outputMediaType;
 	Microsoft::WRL::ComPtr<IMFMediaType> mediaType;
@@ -37,11 +41,17 @@ AudioStream::AudioStream(_In_ Platform::String^ url)
 		);
 
 	//
-	// Create the source reader on the url (file) with the low latency attributes
+	// Create the source reader on the streamHandle (file) with the low latency attributes
 	//
-	ThrowIfFailed(
-		MFCreateSourceReaderFromURL(url->Data(), lowLatencyAttribute.Get(), &m_reader)
-		);
+	ComPtr<IUnknown> pStreamUnk = reinterpret_cast<IUnknown*>(streamHandle);
+	ComPtr<IMFByteStream> pMFStream;
+	ThrowIfFailed(MFCreateMFByteStreamOnStreamEx(pStreamUnk.Get(), &pMFStream));
+
+	ThrowIfFailed(MFCreateSourceReaderFromByteStream(pMFStream.Get(), NULL, &m_reader));
+
+	//ThrowIfFailed(
+	//	MFCreateSourceReaderFromByteStream(pByteStream, lowLatencyAttribute.Get(), &m_reader)
+	//	);
 
 	// Set the decoded output format as PCM
 	// XAudio2 on Windows can process PCM and ADPCM-encoded buffers.

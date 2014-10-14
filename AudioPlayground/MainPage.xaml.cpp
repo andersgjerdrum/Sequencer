@@ -23,12 +23,16 @@ using namespace Windows::UI::Xaml::Data;
 using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
+using namespace Windows::Storage;
+using namespace Windows::Storage::Pickers;
+using namespace Windows::Storage::Streams;
+using namespace Windows::System::Threading;
 using namespace Windows::UI::Input;
+using namespace concurrency;
 using namespace SequencerLib;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-const char16 MUSIC_FILE[] = L"‪Media\\becky.wma";
 
 MainPage::MainPage()
 {
@@ -43,8 +47,7 @@ MainPage::MainPage()
 
 	if (FAILED(hr))
 		ref new COMException(hr, "CreateMasteringVoice failure");
-	SequencerFactory factory;
-	SequencerObject = factory.Create(new SequencerConfiguration(2, 4, 1, 200), pXAudio2.Get(), ref new Platform::String(MUSIC_FILE));
+	
 
 
 
@@ -59,6 +62,9 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 {
 	(void)e;	// Unused parameter
 }
+
+
+
 
 void AudioPlayground::MainPage::Canvas_PointerPressed_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
@@ -80,5 +86,59 @@ void AudioPlayground::MainPage::Canvas_PointerMoved_1(Platform::Object^ sender, 
 int AudioPlayground::MainPage::GetTone(double pointer, double min, double max, double maxPointer)
 {
 	return (int)(min + ((max - min)*(pointer / maxPointer)));
+}
+
+
+
+void AudioPlayground::MainPage::Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	OpenFile();
+}
+
+void MainPage::OpenFile()
+{
+
+	FileOpenPicker^ getVidFile = ref new FileOpenPicker();
+
+	getVidFile->SuggestedStartLocation = PickerLocationId::VideosLibrary;
+	getVidFile->ViewMode = PickerViewMode::Thumbnail;
+
+	getVidFile->FileTypeFilter->Clear();
+	getVidFile->FileTypeFilter->Append(".wma");
+
+	concurrency::cancellation_token_source m_tcs;
+
+	auto m_pickFileTask = task<StorageFile^>(getVidFile->PickSingleFileAsync(), m_tcs.get_token());
+
+	m_pickFileTask.then([this](StorageFile^ fileHandle)
+	{
+		try
+		{
+			if (!fileHandle)
+			{
+				//No Audio:(
+				return;
+			}
+
+			task<IRandomAccessStream^> fOpenStreamTask(fileHandle->OpenAsync(Windows::Storage::FileAccessMode::Read));
+
+
+		
+			fOpenStreamTask.then([this](IRandomAccessStream^ streamHandle)
+			{
+				SequencerFactory factory;
+				SequencerObject = factory.Create(new SequencerConfiguration(2, 4, 1, 200), pXAudio2.Get(), streamHandle);
+			});
+
+		}
+		catch (Platform::Exception^)
+		{
+			//error
+			return;
+
+		}
+	});
+
+	return;
 }
 

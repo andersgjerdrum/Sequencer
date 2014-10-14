@@ -1,6 +1,6 @@
-Debug
+*Debug*
 *.suo
 *.sdf
 *.opensdf
 ipch
-*/Generated Files/*
+*Generated\ Files*

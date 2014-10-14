@@ -159,9 +159,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="AudioPlayground_TemporaryKey.pfx" />
-    <None Include="Media\becky.wma">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Logo.scale-100.png" />
@@ -189,9 +186,6 @@
     <ProjectReference Include="..\SequencerLib\SequencerLib.vcxproj">
       <Project>{9b423614-ccd6-4d3c-aa0e-96f4bc98a895}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="Media\Snare-Drum-8.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

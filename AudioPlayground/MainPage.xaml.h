@@ -38,5 +38,7 @@ namespace AudioPlayground
 		void Canvas_PointerMoved_1(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
 		int GetTone(double pointer, double min, double max, double maxPointer);
 		void AudioPlayground::MainPage::DispatcherTimer_Tick(Platform::Object^ sender, Platform::Object^ e);
+		void Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void OpenFile();
 	};
 }

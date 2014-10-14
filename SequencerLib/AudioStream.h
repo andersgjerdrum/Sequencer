@@ -12,12 +12,14 @@
 #include <mfidl.h>
 #include <mfapi.h>
 #include <mfreadwrite.h>
+using namespace Windows::Storage::Streams;
+
 namespace SequencerLib
 {
 	class AudioStream
 	{
 	public:
-		AudioStream(_In_ Platform::String^ url);
+		AudioStream(IRandomAccessStream^ streamHandle);
 
 		void Restart();
 		std::vector<byte> ReadAll();
