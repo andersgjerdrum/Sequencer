@@ -40,7 +40,7 @@ namespace SequencerLib
         void _stdcall OnLoopEnd(void*){}
         void _stdcall OnVoiceError(void*, HRESULT){}
 	private:
-		void FillAndSubmit(int startIndex, int count, int bytes, byte *bufferAddr);
+		void FillAndSubmit(int startIndex, int count, int bytes, std::vector<byte> *bufferAddr);
 	};
 
 }

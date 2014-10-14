@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "SequencerConfiguration.h"
 #include "Sequencer.h"
+#include "TestUtility.cpp"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace SequencerLib;
 namespace SequencerTests
@@ -21,8 +22,8 @@ namespace SequencerTests
 		{
 			auto conf = new SequencerConfiguration(10, 10, 0, 1);
 			auto seq = new Sequencer(conf);
-			FillBeats(seq, conf, 10 * 10);
-			Assert::IsFalse(AnyAvailible(seq, conf, 10 * 10), L"Cannot Add more beats");
+			TestUtility::FillBeats(seq, conf, 10 * 10);
+			Assert::IsFalse(TestUtility::AnyAvailible(seq, conf, 10 * 10), L"Cannot Add more beats");
 		}
 		TEST_METHOD(Sequencer_ErrorCorrective_if_after_is_taken)
 		{
@@ -46,7 +47,7 @@ namespace SequencerTests
 		{
 			auto conf = new SequencerConfiguration(2, 2, 2, 1);
 			auto seq = new Sequencer(conf);
-			FillBeats(seq, conf, 2 * 2);
+			TestUtility::FillBeats(seq, conf, 2 * 2);
 			for (int i = 0; i < (conf->GetBufferSize() / 2); i = i + conf->GetSmallestPointBetweenBeats())
 			{
 				Assert::IsFalse(seq->IsValidBeatPoint(i - 1), L"Is Not Valid Beat Point");
@@ -58,7 +59,7 @@ namespace SequencerTests
 		{
 			auto conf = new SequencerConfiguration(2, 2, 2, 100);
 			auto seq = new Sequencer(conf);
-			FillBeats(seq, conf, 2 * 2);
+			TestUtility::FillBeats(seq, conf, 2 * 2);
 			for (int i = 0; i < (conf->GetBufferSize() / 2); i = i + conf->GetSmallestPointBetweenBeats())
 			{
 				Assert::IsFalse(seq->IsValidBeatPoint(i - 100), L"Is Not Valid Beat Point");
@@ -67,24 +68,6 @@ namespace SequencerTests
 				Assert::IsTrue(seq->IsValidBeatPoint(i + 50), L"Is Valid Beat Point");
 				Assert::IsFalse(seq->IsValidBeatPoint(i + 100), L"Is Not Valid Beat Point");
 			}
-		}
-		void FillBeats(ISequencer *seq, ISequencerConfiguration *conf, int count)
-		{
-			for (int i = 0; i < (conf->GetBufferSize() / 2); i = i + conf->GetSmallestPointBetweenBeats())
-			{
-				seq->AddBeat(i) == -1;
-			}
-		}
-
-		bool AnyAvailible(ISequencer *seq, ISequencerConfiguration *conf, int count)
-		{
-			for (int i = 0; i < (conf->GetBufferSize() / 2); i = i + conf->GetSmallestPointBetweenBeats())
-			{
-				if (seq->AddBeat(i) != -1){
-					return true;
-				}
-			}
-			return false;
 		}
 	};
 }

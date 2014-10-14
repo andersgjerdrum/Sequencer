@@ -41,17 +41,17 @@ void Audio::SetAmplitude(float amp)
 
 void _stdcall Audio::OnVoiceProcessingPassStart(UINT32 bytesRequired)
 {
-	BufferObject->PrepareBuffer(bytesRequired, [this](int a, int b, int c, byte *bufferAddr)->void {
-		FillAndSubmit(a, b, c,bufferAddr);
+	BufferObject->PrepareBuffer(bytesRequired, [this](int a, int b, int c, std::vector<byte> *bufferAddr)->void {
+		FillAndSubmit(a, b, c, bufferAddr);
 	});
 }
 
-void Audio::FillAndSubmit(int startIndex, int count, int bytes, byte * bufferAddr)
+void Audio::FillAndSubmit(int startIndex, int count, int bytes, std::vector<byte> *bufferAddr)
 {
-	
+
 	XAUDIO2_BUFFER buffer = { 0 };
 	buffer.AudioBytes = bytes * 2;
-	buffer.pAudioData = bufferAddr;
+	buffer.pAudioData = (byte*)&bufferAddr[0];
 	buffer.Flags = 0;
 	buffer.PlayBegin = startIndex;
 	buffer.PlayLength = count;

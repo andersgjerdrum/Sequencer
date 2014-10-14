@@ -236,6 +236,7 @@
     </ClCompile>
     <ClCompile Include="SequencerConfigurationTests.cpp" />
     <ClCompile Include="SequencerTests.cpp" />
+    <ClCompile Include="TestUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="CppUnitTestFramework, Version=11.0" />

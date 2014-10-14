@@ -98,17 +98,18 @@ void AudioPlayground::MainPage::Button_Click(Platform::Object^ sender, Windows::
 void MainPage::OpenFile()
 {
 
-	FileOpenPicker^ getVidFile = ref new FileOpenPicker();
+	FileOpenPicker^ getAudioSample = ref new FileOpenPicker();
 
-	getVidFile->SuggestedStartLocation = PickerLocationId::VideosLibrary;
-	getVidFile->ViewMode = PickerViewMode::Thumbnail;
+	getAudioSample->SuggestedStartLocation = PickerLocationId::MusicLibrary;
+	getAudioSample->ViewMode = PickerViewMode::List;
 
-	getVidFile->FileTypeFilter->Clear();
-	getVidFile->FileTypeFilter->Append(".wma");
+	getAudioSample->FileTypeFilter->Clear();
+	getAudioSample->FileTypeFilter->Append(".wma");
+	getAudioSample->FileTypeFilter->Append(".wav");
 
 	concurrency::cancellation_token_source m_tcs;
 
-	auto m_pickFileTask = task<StorageFile^>(getVidFile->PickSingleFileAsync(), m_tcs.get_token());
+	auto m_pickFileTask = task<StorageFile^>(getAudioSample->PickSingleFileAsync(), m_tcs.get_token());
 
 	m_pickFileTask.then([this](StorageFile^ fileHandle)
 	{
@@ -133,9 +134,7 @@ void MainPage::OpenFile()
 		}
 		catch (Platform::Exception^)
 		{
-			//error
-			return;
-
+			throw;
 		}
 	});
 
