@@ -128,7 +128,7 @@ void MainPage::OpenFile()
 			fOpenStreamTask.then([this](IRandomAccessStream^ streamHandle)
 			{
 				SequencerFactory factory;
-				SequencerObject = factory.Create(new SequencerConfiguration(2, 4, 1, 200), pXAudio2.Get(), streamHandle);
+				SequencerObject = factory.Create(10, pXAudio2.Get(), streamHandle);
 			});
 
 		}

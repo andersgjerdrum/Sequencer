@@ -27,7 +27,7 @@ namespace SequencerTests
 		}
 		static void FillBeats(ISequencer *seq, ISequencerConfiguration *conf, int count)
 		{
-			for (int i = 0; i < (conf->GetBufferSize() / 2); i = i + conf->GetSmallestPointBetweenBeats())
+			for (UINT64 i = 0; i < (conf->GetBufferSize() / 2); i = i + conf->GetSmallestPointBetweenBeats())
 			{
 				seq->AddBeat(i) == -1;
 			}
@@ -35,7 +35,7 @@ namespace SequencerTests
 
 		static bool AnyAvailible(ISequencer *seq, ISequencerConfiguration *conf, int count)
 		{
-			for (int i = 0; i < (conf->GetBufferSize() / 2); i = i + conf->GetSmallestPointBetweenBeats())
+			for (UINT64 i = 0; i < (conf->GetBufferSize() / 2); i = i + conf->GetSmallestPointBetweenBeats())
 			{
 				if (seq->AddBeat(i) != -1){
 					return true;

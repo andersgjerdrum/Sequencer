@@ -15,6 +15,6 @@ namespace SequencerLib
 
 	class SequencerFactory{
 	public:
-		SequencerInstance * Create(ISequencerConfiguration * config, IXAudio2 *pXAudio, IRandomAccessStream^ streamHandle);
+		SequencerInstance * Create(int RecurrenceIntervalSecconds, IXAudio2 *pXAudio, IRandomAccessStream^ streamHandle);
 	};
 }

@@ -193,8 +193,6 @@
     <ClInclude Include="IAudioBuffer.h" />
     <ClInclude Include="ISequencer.h" />
     <ClInclude Include="ISequencerConfiguration.h" />
-    <ClInclude Include="resource1.h" />
-    <ClInclude Include="resource2.h" />
     <ClInclude Include="Sequencer.h" />
     <ClInclude Include="SequencerConfiguration.h" />
     <ClInclude Include="pch.h" />
